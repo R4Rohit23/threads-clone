@@ -23,7 +23,7 @@ function LeftSidebar() {
             <Link
               href={link.route}
               key={link.label}
-              className={`leftsidebar_link ${isActive && "bg-primary-500"} hover:opacity-90 hover:scale-110 transition-scale duration-300 overflow-hidden`}
+              className={`leftsidebar_link ${isActive && "bg-primary-500"} hover:opacity-90 hover:scale-110 transition-scale duration-300 overflow-hidden hover:shadow-lg hover:shadow-purple-900`}
             >
               <Image
                 src={link.imgURL}
