@@ -19,6 +19,8 @@ import { Textarea } from "../ui/textarea";
 import * as z from "zod";
 import Image from "next/image";
 import { ChangeEvent } from "react";
+import { isBase64Image } from "@/lib/utils";
+import { useUploadThing } from "@/lib/uploadthing";
 
 interface Props {
   user: {
@@ -34,6 +36,7 @@ interface Props {
 
 const AccountProfile = ({ user, btnTitle }: Props) => {
   const [files, setFiles] = useState<File[]>([]);
+  const { startUpload } = useUploadThing("media");
 
   const form = useForm({
     resolver: zodResolver(UserValidation),
@@ -45,10 +48,18 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof UserValidation>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof UserValidation>) => {
+    const blob = values.profile_photo;
+    const hasImageChanged = isBase64Image(blob);
+
+    if (hasImageChanged) {
+      const imgRes = await startUpload(files);
+
+      if (imgRes && imgRes[0].url) {
+        values.profile_photo = imgRes[0].url;
+      }
+    }
+
   }
 
   const handleImage = (
@@ -111,7 +122,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
                   type="file"
                   accept="image/*"
                   placeholder="Upload a photo"
-                  className="cursor-pointer"
+                  className="cursor-pointer sm:px-20 px-10"
                   onChange={(e) => handleImage(e, field.onChange)}
                 />
               </FormControl>
@@ -185,7 +196,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
             </FormItem>
           )}
         />
-        <Button type="submit" className="bg-primary-500 hover:opacity-90">{btnTitle}</Button>
+        <Button type="submit" className="bg-primary-500">{btnTitle}</Button>
       </form>
     </Form>
   );
