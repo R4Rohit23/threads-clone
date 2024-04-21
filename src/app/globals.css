@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer components {
+  .center-horizontal {
+    @apply w-full flex justify-center items-center
+  }
+
+  .heading-1 {
+    @apply text-3xl font-bold
+  }
+
+  .gradient-btn {
+    @apply bg-gradient-to-r from-[#000000] to-[#434343] font-bold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out
+  }
+}

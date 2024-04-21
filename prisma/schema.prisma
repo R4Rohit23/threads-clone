@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Thread {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  title     String
+  users     User[]    @relation(fields: [usersIds], references: [id])
+  usersIds  String[]  @db.ObjectId
+  messages  Message[]
+
+  @@map("threads")
+}
+
+model User {
+  id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  email        String  @unique
+  name         String
+  username     String  @unique
+  password     String
+  profileImage String? @default("https://imgs.search.brave.com/p3AvRgqD2Ya2sFXS5kKR4SQt3TIVLOw7y_jTJtv-jpI/rs:fit:860:0:0/g:ce/aHR0cHM6Ly93d3cu/a2luZHBuZy5jb20v/cGljYy9tLzI1Mi0y/NTI0Njk1X2R1bW15/LXByb2ZpbGUtaW1h/Z2UtanBnLWhkLXBu/Zy1kb3dubG9hZC5w/bmc")
+
+  // a user can be followed by zero or more users
+  followedBy    User[]   @relation("UserFollows", fields: [followedByIDs], references: [id])
+  followedByIDs String[] @db.ObjectId
+
+  // a user can follow zero or more users
+  following    User[]   @relation("UserFollows", fields: [followingIDs], references: [id])
+  followingIDs String[] @db.ObjectId
+
+  threads  Thread[]  @relation(fields: [threadId], references: [id])
+  threadId String[]  @db.ObjectId
+  messages Message[]
+
+  @@map("users")
+}
+
+model Message {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  text      String
+  thread    Thread   @relation(fields: [threadId], references: [id])
+  threadId  String   @db.ObjectId
+  sender    User     @relation(fields: [senderId], references: [id])
+  senderId  String   @db.ObjectId
+
+  @@map("messages")
+}
+
+type Followers {
+  followers String[]
+}
