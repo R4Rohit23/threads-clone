@@ -97,9 +97,16 @@ const LoginPage = () => {
 						</div>
 
 						<ButtonField
+							type="button"
 							text="Continue With Google"
 							className="gradient-btn w-full hover:scale-110 transition-transform duration-300"
 							Icon={FaGoogle}
+							handleFunction={async () => {
+								await signIn("google", {
+                                    callbackUrl: "/",
+                                    redirect: false
+                                });
+							}}
 						/>
 					</form>
 				)}

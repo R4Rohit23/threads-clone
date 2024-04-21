@@ -62,7 +62,7 @@ export default function Navbar() {
 											<span className="sr-only">Open user menu</span>
 											<img
 												className="h-8 w-8 rounded-full object-cover"
-												src={session?.user?.profileImage}
+												src={session?.user?.profileImage as string || session?.user?.image as string}
 												alt=""
 											/>
 										</Menu.Button>
