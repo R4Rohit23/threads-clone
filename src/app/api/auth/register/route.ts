@@ -7,7 +7,7 @@ export async function POST(request: Request) {
     // accessing the request body and converting it to json format
     const body = await request.json();
 
-    const { email, name, password, username } = body;
+    const { email, name, password, username, profileImage } = body;
 
     if (!email || !name || !password || !username) {
       return new NextResponse("Missing Info, please provide email, name, password and username", { status: 404 });
@@ -31,6 +31,7 @@ export async function POST(request: Request) {
         name,
         username,
         password: hashedPassword,
+        profileImage
       },
     });
 

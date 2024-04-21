@@ -6,7 +6,7 @@ import InputField from "@/common/InputField";
 import { Email, Password, Name, Username } from "@/utils/InputFields";
 import { VEmail, VPassword, VName, VUsername } from "@/validation/InputField";
 import { Formik } from "formik";
-import React, { useEffect } from "react";
+import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 import { FaGoogle } from "react-icons/fa";
 import * as Yup from "yup";
 import { signIn, useSession } from "next-auth/react";
@@ -14,10 +14,13 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { APIHandler } from "@/server/ApiHandler";
 import ROUTES from "@/server/Routes";
+import Link from "next/link";
+import { UploadButton } from "@/utils/uploadthing";
 
 const LoginPage = () => {
 	const inputFields = [Name, Username, Email, Password];
-	
+	const [uploadedImage, setUploadedImage] = useState<string>();
+
 	const router = useRouter();
 
 	const Validation = Yup.object().shape({
@@ -27,42 +30,50 @@ const LoginPage = () => {
 		password: VPassword,
 	});
 
+	const imageRef = useRef<any>();
 
 	return (
-		<div className="center-horizontal sm:-mt-80 flex-col text-white gap-5">
+		<div className="absolute center-horizontal top-5 flex-col text-white gap-5">
 			<h1 className="heading-1 backdrop-blur-md">Register</h1>
 
 			<Formik
-				initialValues={{ 
-                    name: "", 
-                    username: "", 
-                    email: "", 
-                    password: "" 
-                }}
+				initialValues={{
+					name: "",
+					username: "",
+					email: "",
+					password: "",
+				}}
 				validationSchema={Validation}
 				onSubmit={async (values: any, { setSubmitting }) => {
 					try {
-                        toast.success("I am clicked");
 						setSubmitting(true);
-						const { data } = await APIHandler("POST", ROUTES.AUTH.REGISTER, values);
-                        console.log(data);
-                        if (!data.status) {
-                            toast.error(data.message ?? "Internal Server Error");
-                            setSubmitting(false);
-                        } else {
-                            console.log(data);
-                            toast.success(data.message?? "Successfully Registered");
-                            setSubmitting(false);
-                            signIn("credentials", {
+						const { data } = await APIHandler(
+							"POST",
+							ROUTES.AUTH.REGISTER,
+							{
+								name: values.name,
+                                username: values.username,
                                 email: values.email,
                                 password: values.password,
-                            });
-                            router.push("/");
-                        }
+                                profileImage: uploadedImage,
+							}
+						);
+						if (!data.success) {
+							toast.error(data.message ?? "Internal Server Error");
+							setSubmitting(false);
+						} else {
+							toast.success(data.message ?? "Successfully Registered");
+							setSubmitting(false);
+							signIn("credentials", {
+								email: values.email,
+								password: values.password,
+							});
+							router.push("/");
+						}
 					} catch (error) {
 						console.log(error);
-                        toast.error("Internal Server Error");
-                        setSubmitting(false);
+						toast.error("Internal Server Error");
+						setSubmitting(false);
 					}
 				}}
 			>
@@ -75,6 +86,23 @@ const LoginPage = () => {
 					isSubmitting,
 				}) => (
 					<form onSubmit={handleSubmit} className="space-y-5">
+						<img
+							src={"/assets/user-stroke-rounded.svg"}
+							className="border-2 border-white bg-dark-2 rounded-full w-28 h-28 mx-auto object-cover p-3"
+							ref={imageRef}
+						/>
+
+						<UploadButton
+							endpoint="imageUploader"
+							onClientUploadComplete={(res) => {
+								imageRef.current.src = res[0].url;
+								setUploadedImage(res[0].url);
+							}}
+							onUploadError={(error: Error) => {
+								toast.error(`ERROR! ${error.message}`);
+							}}
+						/>
+
 						{inputFields.map((inp, indx) => (
 							<div className="space-y-1">
 								<InputField
@@ -99,7 +127,7 @@ const LoginPage = () => {
 							text="Submit"
 							disabled={isSubmitting}
 							className="gradient-btn hover:scale-110 transition-transform duration-300"
-                            loading={isSubmitting}
+							loading={isSubmitting}
 						/>
 
 						<div className="flex items-center">
@@ -112,8 +140,16 @@ const LoginPage = () => {
 							text="Continue With Google"
 							className="gradient-btn w-full hover:scale-110 transition-transform duration-300"
 							Icon={FaGoogle}
-                            loading={isSubmitting}
+							loading={isSubmitting}
 						/>
+
+						<div className="capitalize text-sm text-gray-400 text-center">
+							already have an account. Please{" "}
+							<Link href={"/login"} className="opacity-100 text-white">
+								Login
+							</Link>{" "}
+							Here
+						</div>
 					</form>
 				)}
 			</Formik>

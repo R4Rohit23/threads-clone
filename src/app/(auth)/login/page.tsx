@@ -12,6 +12,7 @@ import * as Yup from "yup";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 const LoginPage = () => {
 	const router = useRouter();
@@ -108,6 +109,10 @@ const LoginPage = () => {
                                 });
 							}}
 						/>
+
+						<div className="capitalize text-sm text-gray-400 text-center">
+							don't have an account. Please <Link href={"/register"} className="opacity-100 text-white">Register</Link>  Here
+						</div>
 					</form>
 				)}
 			</Formik>
