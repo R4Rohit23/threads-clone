@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.0.0",
     "@headlessui/react": "^1.7.19",
     "@heroicons/react": "^2.1.3",
     "@hugeicons/react-pro": "^0.2.5",
