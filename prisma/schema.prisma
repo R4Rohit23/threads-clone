@@ -18,6 +18,7 @@ model Thread {
   likedBy       String[]  @default([])
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  thumbnails    String[]
 
   @@map("threads")
 }
@@ -56,6 +57,7 @@ model Comment {
   updatedAt       DateTime  @updatedAt
   thread          Thread    @relation(fields: [threadId], references: [id], onDelete: Cascade)
   threadId        String    @db.ObjectId
+  thumbnails      String[]
 
   @@map("comments")
 }

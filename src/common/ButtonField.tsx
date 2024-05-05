@@ -35,7 +35,7 @@ const ButtonField: React.FC<Partial<PropButton>> = (props) => {
 				type={type}
 				className={`${className} flex items-center gap-4 justify-center  sm:p-3 text-xs sm:text-sm  ${
 					width ? width : "w-full"
-				} ${padding ? padding : "px-2 py-1 sm:px-3.5 sm:py-2.5"}`}
+				} ${padding ? padding : "px-2 py-1 sm:px-3.5 sm:py-2.5"} gradient-btn hover:scale-110 transition-transform duration-300`}
 				onClick={handleFunction}
 				disabled={loading}
 			>

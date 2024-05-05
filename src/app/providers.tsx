@@ -8,6 +8,9 @@ import { Toaster } from "react-hot-toast";
 
 import { ourFileRouter } from "@/app/api/uploadthing/core";
 
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+
 const toasterStyle = {
 	style: {
 		color: "white",
@@ -15,12 +18,17 @@ const toasterStyle = {
 	},
 };
 
+const queryClient = new QueryClient();
+
 export function Providers({ children }: { children: React.ReactNode }) {
 	return (
 		<SessionProvider>
-			<NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-			<Toaster toastOptions={toasterStyle} />
-			{children}
+			<QueryClientProvider client={queryClient}>
+				<ReactQueryDevtools initialIsOpen={false} />
+				<NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
+				<Toaster toastOptions={toasterStyle} />
+				{children}
+			</QueryClientProvider>
 		</SessionProvider>
 	);
 }

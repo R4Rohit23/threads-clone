@@ -5,6 +5,7 @@ declare module "next-auth" {
     interface User {
         profileImage?: string
         username?: string;
+        id?: string;
     }
 
     interface Session {
@@ -12,8 +13,14 @@ declare module "next-auth" {
             profileImage?: string;
             accessToken?: string;
             username?: string;
+            id?: string;
         } & DefaultSession['user']
     }
+
+    interface Profile {
+        picture?: string;
+    }
+    
 }
 
 declare module "next-auth/jwt" {
@@ -21,5 +28,6 @@ declare module "next-auth/jwt" {
         profileImage?: string;
         accessToken?: string;
         username?: string;
+        id?: string;
     }
 }

@@ -4,7 +4,7 @@ import { verifyToken } from "@/validation/verifyToken";
 import { User } from "@prisma/client";
 import { SENDER_SELECT } from "../config";
 
-const updateType = ["threadLike", "commentLike", "parentComment", "subComment"];
+const updateType = ["threadLike"];
 
 // Route for Get all threads
 export async function GET() {
@@ -13,7 +13,7 @@ export async function GET() {
 			include: {
 				author: SENDER_SELECT,
 				comments: {
-					where: { parentCommentId: null} ,
+					where: { parentCommentId: null },
 					select: {
 						id: true,
 						text: true,
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
 	try {
 		const user = await verifyToken(req);
 
-		const { title } = await req.json();
+		const { title, thumbnails } = await req.json();
 
 		if (!title) {
 			return NextResponse.json({
@@ -55,6 +55,7 @@ export async function POST(req: NextRequest) {
 			data: {
 				title,
 				authorId: user.id,
+				thumbnails: thumbnails,
 			},
 		});
 
@@ -143,5 +144,3 @@ const handleThreadLike = async (user: User, threadId: string) => {
 		return NextResponse.json({ success: false, message: error.message });
 	}
 };
-
-

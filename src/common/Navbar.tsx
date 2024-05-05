@@ -5,22 +5,42 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { signOut, useSession } from "next-auth/react";
-
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 function classNames(...classes: string[]) {
 	return classes.filter(Boolean).join(" ");
 }
 
 const navLinks = [
-	{ name: "Home", icon: "/assets/home-04-stroke-rounded.svg" },
-	{ name: "Search", icon: "/assets/search-01-stroke-rounded.svg" },
-	{ name: "Add", icon: "/assets/pencil-edit-02-stroke-rounded.svg" },
-	{ name: "Likes", icon: "/assets/favourite-stroke-rounded.svg" },
-	{ name: "Profile", icon: "/assets/user-stroke-rounded.svg" },
+	{ name: "Home", icon: "/assets/home-04-stroke-rounded.svg", href: "/" },
+	{
+		name: "Search",
+		icon: "/assets/search-01-stroke-rounded.svg",
+		href: "/search",
+	},
+	{
+		name: "Add",
+		icon: "/assets/pencil-edit-02-stroke-rounded.svg",
+		href: "/thread/create",
+	},
+	{
+		name: "Likes",
+		icon: "/assets/favourite-stroke-rounded.svg",
+		href: "/my-likes",
+	},
+	{
+		name: "Profile",
+		icon: "/assets/user-stroke-rounded.svg",
+		href: "/profile",
+	},
 ];
 
 export default function Navbar() {
-  const { data: session} = useSession();
+	const { data: session } = useSession();
+	const pathname = usePathname();
+
+	const fullName = session?.user && session?.user.name?.split("").join(" ");
 
 	return (
 		<Disclosure as="nav" className="bg-dark-1 backdrop-blur-md shadow">
@@ -37,11 +57,24 @@ export default function Navbar() {
 									/>
 								</div>
 							</div>
-							<div className="hidden sm:ml-6 sm:flex sm:space-x-20 items-center">
+							<div className="hidden sm:ml-28 sm:flex sm:space-x-20 items-center">
 								{navLinks.map((item, indx) => (
-									<button key={indx} className="opacity-40 hover:opacity-100 hover:border-b-2 py-4 transition-all duration-200">
-                    <Image src={item.icon} alt={item.name} width={28} height={28}/>
-									</button>
+									<Link
+										key={indx}
+										className={`hover:opacity-100 hover:border-b-2 py-4 transition-all duration-200 ${
+											pathname == item.href
+												? "opacity-100 border-b-2"
+												: "opacity-40"
+										}`}
+										href={item.href}
+									>
+										<Image
+											src={item.icon}
+											alt={item.name}
+											width={28}
+											height={28}
+										/>
+									</Link>
 								))}
 							</div>
 							<div className="hidden sm:ml-6 sm:flex sm:items-center">
@@ -62,7 +95,11 @@ export default function Navbar() {
 											<span className="sr-only">Open user menu</span>
 											<img
 												className="h-8 w-8 rounded-full object-cover"
-												src={session?.user?.profileImage as string || session?.user?.image as string}
+												src={
+													(session?.user?.profileImage as string) ??
+													(session?.user?.image as string) ??
+													`https://ui-avatars.com/api/?name=${fullName}`
+												}
 												alt=""
 											/>
 										</Menu.Button>
@@ -107,9 +144,9 @@ export default function Navbar() {
 														className={classNames(
 															"block px-4 py-2 text-sm text-gray-500 hover:text-red-600"
 														)}
-                            onClick={() => {
-                              signOut();
-                            }}
+														onClick={() => {
+															signOut();
+														}}
 													>
 														Sign out
 													</button>
