@@ -6,27 +6,41 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useComment } from "@/hooks/addComment";
 import { formatDate } from "@/utils/reusableFunctions";
-import { FaHeart } from "react-icons/fa";
-import { CiHeart } from "react-icons/ci";
 import Like from "@/common/Like";
 
+import Comment from "@/common/Comment";
+
 interface IProps {
-	thread: IThread;
+	thread?: IThread;
+	threadId?: string;
 	comments: IComments[];
+	type: "parentComment" | "subComment";
+	commentId?: string;
 }
 
-const Discussion = ({ comments, thread }: IProps) => {
+const Discussion = ({ comments, thread, type, commentId, threadId }: IProps) => {
 	const { data: session } = useSession();
 	const [comment, setComment] = useState("");
-	const { addComment } = useComment({ threadId: thread.id });
+	const { addComment } = useComment({ threadId: thread?.id, commentId: commentId });
 
 	const handleSubmit = (e: any) => {
 		e.preventDefault();
-		addComment({
-			type: "parentComment",
-			threadId: thread.id,
-			text: comment,
-		});
+
+		if (type === "parentComment") {
+			addComment({
+                type: "parentComment",
+                threadId: thread?.id,
+                text: comment,
+            });
+		} else {
+			addComment({
+				type: "subComment",
+				threadId: threadId,
+				text: comment,
+				commentId: commentId
+			});
+		}
+		
 		setComment("");
 	};
 
@@ -34,7 +48,7 @@ const Discussion = ({ comments, thread }: IProps) => {
 		<section className="bg-dark-1 py-8 lg:py-16 antialiased">
 			<div className="max-w-3xl mx-auto">
 				<div className="flex justify-between items-center mb-6">
-					<h2 className="text-lg lg:text-2xl font-bold text-white">
+					<h2 className="text-lg lg:text-xl font-bold text-white">
 						Discussion ({comments.length})
 					</h2>
 				</div>
@@ -70,31 +84,40 @@ const Discussion = ({ comments, thread }: IProps) => {
 						Post comment
 					</button>
 				</form>
-				{comments.map((item, indx) => (
-					<Comment comment={item} isReply={false} key={indx} thread={thread} />
-				))}
+				<div className="flex flex-col ">
+					{comments.map((item, indx) => (
+						<CommentComponent
+							comment={item}
+							isReply={false}
+							key={indx}
+							thread={thread}
+						/>
+					))}
+				</div>
 			</div>
 		</section>
 	);
 };
 
-const Comment = ({
+const CommentComponent = ({
 	isReply,
 	comment,
-	thread
+	thread,
 }: {
 	isReply: boolean;
 	comment: IComments;
-	thread: IThread;
+	thread?: IThread;
 }) => {
-	const { data: session } = useSession();
-	const { likeComment } = useComment({ threadId: thread.id});
+	const { likeComment } = useComment({
+		threadId: thread?.id,
+		commentId: comment?.id,
+	});
 
 	return (
 		<article
 			className={`p-6 ${isReply ? "mb-3 ml-6 lg:ml-12" : ""} text-base  ${
-				isReply ? "" : "rounded-lg"
-			}`}
+				isReply ? "" : ""
+			} border-b border-gray-700`}
 		>
 			<footer className="flex justify-between items-center mb-2">
 				<div className="flex items-center">
@@ -113,10 +136,17 @@ const Comment = ({
 			</footer>
 			<div className="border-l-2 border-gray-600 pl-5 ml-3 flex flex-col gap-5">
 				<p className="text-gray-400 ">{comment.text}</p>
-				<Like
-					data={comment}
-					handleFunction={() => likeComment({ commentId: comment.id })}
-				/>
+				<div className="flex gap-5 items-center">
+					<Like
+						data={comment}
+						handleFunction={() => likeComment({ commentId: comment.id })}
+					/>
+					<Comment
+						href={"/thread/" + thread?.id + "/comment/" + comment.id}
+						totalComments={comment.totalComments}
+						readonly={false}
+					/>
+				</div>
 			</div>
 		</article>
 	);

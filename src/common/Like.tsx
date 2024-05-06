@@ -18,7 +18,7 @@ const Like = ({ handleFunction, data }: ILike) => {
 					{data?.likedBy?.includes(session?.user.id as string) ? (
 						<FaHeart className={`w-5 h-5 text-red-500`} />
 					) : (
-						<CiHeart className="w-6 h-6" />
+						<CiHeart className="w-6 h-6 opacity-40 hover:opacity-100" />
 					)}
 				</button>
 			</div>

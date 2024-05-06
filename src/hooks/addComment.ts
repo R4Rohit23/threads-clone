@@ -24,10 +24,22 @@ export const useComment = (props: IAddComment) => {
 		},
 	});
 
+	const subComment = useMutation({
+		mutationFn: addSubComment,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["commentById", props.commentId] });
+		},
+		onError: (error) => {
+			toast.error(error.message ?? "Error While Creating Comment");
+			console.log(error);
+		},
+	});
+
 	const commentLike = useMutation({
 		mutationFn: likeCommentFunction,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["threadById", props.threadId] });
+			queryClient.invalidateQueries({ queryKey: ["commentById", props.commentId] });
 		},
 		onError: (error) => {
 			toast.error(error.message ?? "Error While Liking Comment");
@@ -35,10 +47,12 @@ export const useComment = (props: IAddComment) => {
 		},
 	});
 
-	const addComment = async ({ type, text, threadId }: IAddComment) => {
+	const addComment = async ({ type, text, threadId, commentId }: IAddComment) => {
 		switch (type) {
 			case "parentComment":
 				await parentComment.mutateAsync({ type, text, threadId });
+			case "subComment": 
+				await subComment.mutateAsync({ type, text, threadId, commentId })
 		}
 	};
 
@@ -54,6 +68,23 @@ const addParentComment = async ({ type, text, threadId }: IAddComment) => {
 		type,
 		threadId,
 		text,
+	});
+
+	if (!data.success) {
+		throw new Error(data.message);
+	} else {
+		toast.success("Comment added successfully");
+		return data;
+	}
+
+};
+
+const addSubComment = async ({ type, text, threadId, commentId }: IAddComment) => {
+	const { data } = await APIHandler("POST", ROUTES.COMMENT, {
+		type,
+		threadId,
+		text,
+		parentId: commentId
 	});
 
 	if (!data.success) {

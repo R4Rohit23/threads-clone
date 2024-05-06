@@ -8,16 +8,14 @@ import Loader from "@/common/Loader";
 import toast from "react-hot-toast";
 import { checkIsImage, formatDate } from "@/utils/reusableFunctions";
 import { FaArrowLeft, FaArrowRight, FaHeart } from "react-icons/fa";
-import { CiHeart } from "react-icons/ci";
-import { useSession } from "next-auth/react";
 import { useUpdateThread } from "@/hooks/updateThread";
 import Discussion from "@/components/Home/Discussion";
 import { IComments, IThread } from "@/interface/thread";
 import Like from "@/common/Like";
+import Comment from "@/common/Comment";
 
 const ThreadById = () => {
-	const { id: threadId } = useParams();
-	const { data: session } = useSession();
+	const { threadId } = useParams();
 	const { updateThread } = useUpdateThread();
 	const [currentIndex, setCurrentIndex] = useState<number>(0);
 
@@ -57,7 +55,7 @@ const ThreadById = () => {
 								className="rounded-full object-cover w-10 h-10"
 							/>
 
-							<div className="flex flex-col relative">
+							<div className="flex flex-col relative gap-2">
 								<div className="flex items-center gap-2">
 									<p>@{data?.author?.username} </p>
 									<p className="text-gray-400 text-sm">
@@ -120,45 +118,25 @@ const ThreadById = () => {
 										</button>
 									)}
 								</div>
-
-								{/* <div>
-									<button
-										onClick={() =>
+								<div className="flex gap-5">
+									<Like
+										data={data}
+										handleFunction={() =>
 											updateThread({
 												type: "threadLike",
 												threadId: data?.id as string,
 											})
 										}
-									>
-										{data?.likedBy?.includes(session?.user.id as string) ? (
-											<FaHeart className={`w-5 h-5 text-red-500`} />
-										) : (
-											<CiHeart className="w-6 h-6" />
-										)}
-									</button>
+									/>
+									<Comment readonly totalComments={data?.totalComments as number}/>
 								</div>
-								<div>
-									<p className="text-gray-400 text-sm">
-										{data?.totalLikes && data.totalLikes > 1
-											? `${data?.totalLikes} likes`
-											: `${data?.totalLikes} like`}
-									</p>
-								</div> */}
-								<Like
-									data={data}
-									handleFunction={() =>
-										updateThread({
-											type: "threadLike",
-											threadId: data?.id as string,
-										})
-									}
-								/>
 							</div>
 						</div>
 					</div>
 					<Discussion
 						comments={data?.comments as IComments[]}
 						thread={data as IThread}
+						type="parentComment"
 					/>
 				</div>
 			)}
