@@ -4,5 +4,8 @@ export const SENDER_SELECT = {
         username: true,
         name: true,
         profileImage: true,
+        bio: true,
+        totalFollowers: true,
+        totalFollowing: true
     },
 }

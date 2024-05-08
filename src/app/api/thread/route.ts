@@ -116,12 +116,24 @@ const handleThreadLike = async (user: User, threadId: string) => {
 		const isAlreadyLiked = thread.likedBy.includes(user.id);
 
 		if (isAlreadyLiked) {
+			const updatedThread = await prisma.thread.update({
+				where: {
+					id: threadId,
+				},
+				data: {
+					likedBy: {
+						set: thread.likedBy.filter((userId) => userId !== user.id),
+					},
+					totalLikes: { decrement: 1 },
+				},
+			});
 			return NextResponse.json({
-				success: false,
-				message: "You have already liked this thread",
+				success: true,
+				message: "Thread Unliked Successfully",
+				updatedThread
 			});
 		} else {
-			const liked = await prisma.thread.update({
+			const updateThread = await prisma.thread.update({
 				where: { id: threadId },
 				data: {
 					likedBy: {
@@ -136,7 +148,7 @@ const handleThreadLike = async (user: User, threadId: string) => {
 			return NextResponse.json({
 				success: true,
 				message: "Thread liked successfully",
-				data: liked,
+				updateThread,
 			});
 		}
 	} catch (error: any) {

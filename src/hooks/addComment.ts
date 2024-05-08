@@ -38,8 +38,8 @@ export const useComment = (props: IAddComment) => {
 	const commentLike = useMutation({
 		mutationFn: likeCommentFunction,
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["threadById", props.threadId] });
-			queryClient.invalidateQueries({ queryKey: ["commentById", props.commentId] });
+			console.log(props.commentId);
+			queryClient.invalidateQueries({ queryKey: ["commentById",props.commentId as string] });
 		},
 		onError: (error) => {
 			toast.error(error.message ?? "Error While Liking Comment");
@@ -51,8 +51,12 @@ export const useComment = (props: IAddComment) => {
 		switch (type) {
 			case "parentComment":
 				await parentComment.mutateAsync({ type, text, threadId });
+				break;
 			case "subComment": 
-				await subComment.mutateAsync({ type, text, threadId, commentId })
+				await subComment.mutateAsync({ type, text, threadId, commentId });
+				break;
+			default:
+				break;
 		}
 	};
 
@@ -90,7 +94,7 @@ const addSubComment = async ({ type, text, threadId, commentId }: IAddComment) =
 	if (!data.success) {
 		throw new Error(data.message);
 	} else {
-		toast.success("Comment added successfully");
+		toast.success("Comment Added Successfully");
 		return data;
 	}
 
@@ -101,12 +105,10 @@ const likeCommentFunction = async ({ commentId }: IAddComment) => {
 		commentId,
 	});
 
-	console.log(data);
-
 	if (!data.success) {
 		throw new Error(data.message);
 	} else {
-		toast.success("Comment Liked successfully");
+		toast.success(data.message ?? "Comment Updated Successfully");
 	}
 
 	return data;

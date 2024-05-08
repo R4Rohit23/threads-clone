@@ -41,7 +41,7 @@ const likeThread = async ({ type, threadId }: IUpdateThread) => {
     if (!data.success) {
         throw new Error(data.message)
     } else {
-        toast.success("Thread Liked");
+        toast.success(data.message ?? "Thread Updated Successfully");
     }
 
 	return data;

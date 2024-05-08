@@ -228,9 +228,20 @@ const handleCommentLike = async (user: User, commentId: string) => {
 		const isAlreadyLiked = comment.likedBy.includes(user.id);
 
 		if (isAlreadyLiked) {
+			const unLiked = await prisma.comment.update({
+				where: { id: commentId },
+				data: {
+					likedBy: {
+						set: comment.likedBy.filter((userId) => userId !== user.id),
+					},
+					totalLikes: { decrement: 1 },
+				},
+			});
+
 			return NextResponse.json({
-				success: false,
-				message: "You have already liked this comment",
+				success: true,
+				message: "Comment Unlike successfully",
+				data: unLiked,
 			});
 		} else {
 			const liked = await prisma.comment.update({

@@ -10,7 +10,7 @@ datasource db {
 model Thread {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
   title         String
-  author        User      @relation(fields: [authorId], references: [id])
+  author        User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId      String    @db.ObjectId
   comments      Comment[]
   totalLikes    Int       @default(0)
@@ -24,20 +24,24 @@ model Thread {
 }
 
 model User {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  email         String    @unique
-  name          String
-  username      String    @unique
-  password      String
-  profileImage  String?   @default("https://imgs.search.brave.com/p3AvRgqD2Ya2sFXS5kKR4SQt3TIVLOw7y_jTJtv-jpI/rs:fit:860:0:0/g:ce/aHR0cHM6Ly93d3cu/a2luZHBuZy5jb20v/cGljYy9tLzI1Mi0y/NTI0Njk1X2R1bW15/LXByb2ZpbGUtaW1h/Z2UtanBnLWhkLXBu/Zy1kb3dubG9hZC5w/bmc")
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  email          String    @unique
+  name           String
+  username       String    @unique
+  bio            String    @default("")
+  password       String
+  profileImage   String?   @default("https://imgs.search.brave.com/p3AvRgqD2Ya2sFXS5kKR4SQt3TIVLOw7y_jTJtv-jpI/rs:fit:860:0:0/g:ce/aHR0cHM6Ly93d3cu/a2luZHBuZy5jb20v/cGljYy9tLzI1Mi0y/NTI0Njk1X2R1bW15/LXByb2ZpbGUtaW1h/Z2UtanBnLWhkLXBu/Zy1kb3dubG9hZC5w/bmc")
   // a user can be followed by zero or more users
-  followedBy    User[]    @relation("UserFollows", fields: [followedByIDs], references: [id])
-  followedByIDs String[]  @db.ObjectId
+  followedBy     User[]    @relation("UserFollows", fields: [followedByIDs], references: [id])
+  followedByIDs  String[]  @db.ObjectId
+  totalFollowers Int       @default(0)
   // a user can follow zero or more users
-  following     User[]    @relation("UserFollows", fields: [followingIDs], references: [id])
-  followingIDs  String[]  @db.ObjectId
-  threads       Thread[]
-  comments      Comment[]
+  following      User[]    @relation("UserFollows", fields: [followingIDs], references: [id])
+  followingIDs   String[]  @db.ObjectId
+  totalFollowing Int       @default(0)
+  threads        Thread[]
+  comments       Comment[]
+  followRequests Request[]
 
   @@map("users")
 }
@@ -60,4 +64,13 @@ model Comment {
   thumbnails      String[]
 
   @@map("comments")
+}
+
+model Request {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @db.ObjectId
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
+  updateAt  DateTime @default(now())
 }

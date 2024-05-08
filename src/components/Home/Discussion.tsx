@@ -9,31 +9,35 @@ import { formatDate } from "@/utils/reusableFunctions";
 import Like from "@/common/Like";
 
 import Comment from "@/common/Comment";
+import CommentById from "@/app/thread/[threadId]/comment/[commentId]/page";
+import ButtonField from "@/common/ButtonField";
 
 interface IProps {
 	thread?: IThread;
 	threadId?: string;
 	comments: IComments[];
-	type: "parentComment" | "subComment";
 	commentId?: string;
+	type: "parentComment" | "subComment";
 }
 
 const Discussion = ({ comments, thread, type, commentId, threadId }: IProps) => {
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const { data: session } = useSession();
 	const [comment, setComment] = useState("");
 	const { addComment } = useComment({ threadId: thread?.id, commentId: commentId });
 
-	const handleSubmit = (e: any) => {
+	const handleSubmit = async (e: any) => {
 		e.preventDefault();
+		setIsLoading(true);
 
 		if (type === "parentComment") {
-			addComment({
+			await addComment({
                 type: "parentComment",
                 threadId: thread?.id,
                 text: comment,
             });
 		} else {
-			addComment({
+			await addComment({
 				type: "subComment",
 				threadId: threadId,
 				text: comment,
@@ -42,6 +46,7 @@ const Discussion = ({ comments, thread, type, commentId, threadId }: IProps) => 
 		}
 		
 		setComment("");
+		setIsLoading(false);
 	};
 
 	return (
@@ -49,7 +54,7 @@ const Discussion = ({ comments, thread, type, commentId, threadId }: IProps) => 
 			<div className="max-w-3xl mx-auto">
 				<div className="flex justify-between items-center mb-6">
 					<h2 className="text-lg lg:text-xl font-bold text-white">
-						Discussion ({comments.length})
+						Discussion ({thread?.totalComments ?? comments?.length})
 					</h2>
 				</div>
 
@@ -60,7 +65,7 @@ const Discussion = ({ comments, thread, type, commentId, threadId }: IProps) => 
 						</label>
 						<div className="absolute top-0 -left-14">
 							<Image
-								src={session?.user?.profileImage as string}
+								src={session?.user?.profileImage as string || session?.user.image as string}
 								width={300}
 								height={400}
 								alt="Profile Image"
@@ -77,12 +82,11 @@ const Discussion = ({ comments, thread, type, commentId, threadId }: IProps) => 
 							onChange={(e) => setComment(e.target.value)}
 						/>
 					</div>
-					<button
+					<ButtonField
 						type="submit"
-						className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-dark-2 rounded-lg focus:ring-4 focus:ring-primary-200 focus:ring-primary-900 hover:scale-105"
-					>
-						Post comment
-					</button>
+						text="Post Comment"
+						loading={isLoading}
+					/>
 				</form>
 				<div className="flex flex-col ">
 					{comments.map((item, indx) => (
@@ -91,6 +95,8 @@ const Discussion = ({ comments, thread, type, commentId, threadId }: IProps) => 
 							isReply={false}
 							key={indx}
 							thread={thread}
+							threadId={threadId}
+							commentId={commentId}
 						/>
 					))}
 				</div>
@@ -103,14 +109,18 @@ const CommentComponent = ({
 	isReply,
 	comment,
 	thread,
+	threadId,
+	commentId
 }: {
 	isReply: boolean;
 	comment: IComments;
 	thread?: IThread;
+	threadId?: string;
+	commentId?: string;
 }) => {
 	const { likeComment } = useComment({
 		threadId: thread?.id,
-		commentId: comment?.id,
+		commentId: commentId,
 	});
 
 	return (
@@ -142,7 +152,7 @@ const CommentComponent = ({
 						handleFunction={() => likeComment({ commentId: comment.id })}
 					/>
 					<Comment
-						href={"/thread/" + thread?.id + "/comment/" + comment.id}
+						href={"/thread/" + threadId + "/comment/" + comment.id}
 						totalComments={comment.totalComments}
 						readonly={false}
 					/>

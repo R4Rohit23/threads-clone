@@ -136,6 +136,7 @@ const ThreadById = () => {
 					<Discussion
 						comments={data?.comments as IComments[]}
 						thread={data as IThread}
+						threadId={data?.id}
 						type="parentComment"
 					/>
 				</div>
