@@ -7,7 +7,6 @@ interface PropButton extends HTMLButtonElement {
 	text: string;
 	handleFunction(): any;
 	width?: string;
-	bgColor?: string;
 	textColor?: string;
 	padding?: string;
 	Icon?: React.ElementType;
@@ -22,7 +21,6 @@ const ButtonField: React.FC<Partial<PropButton>> = (props) => {
 		text,
 		className,
 		width,
-		bgColor,
 		textColor,
 		Icon,
 		padding,
@@ -33,9 +31,9 @@ const ButtonField: React.FC<Partial<PropButton>> = (props) => {
 		<div>
 			<Button
 				type={type}
-				className={`${className} flex items-center gap-4 justify-center  sm:p-3 text-xs sm:text-sm  ${
+				className={`${className ? className : "gradient-btn hover:scale-110 transition-transform duration-300"} flex items-center gap-4 justify-center  sm:p-3 text-xs sm:text-sm  ${
 					width ? width : "w-full"
-				} ${padding ? padding : "px-2 py-1 sm:px-3.5 sm:py-2.5"} gradient-btn hover:scale-110 transition-transform duration-300`}
+				} ${padding ? padding : "px-2 py-1 sm:px-3.5 sm:py-2.5"}`}
 				onClick={handleFunction}
 				disabled={loading}
 			>

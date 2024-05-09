@@ -9,7 +9,6 @@ import { formatDate } from "@/utils/reusableFunctions";
 import Like from "@/common/Like";
 
 import Comment from "@/common/Comment";
-import CommentById from "@/app/thread/[threadId]/comment/[commentId]/page";
 import ButtonField from "@/common/ButtonField";
 
 interface IProps {
@@ -105,7 +104,7 @@ const Discussion = ({ comments, thread, type, commentId, threadId }: IProps) => 
 	);
 };
 
-const CommentComponent = ({
+export const CommentComponent = ({
 	isReply,
 	comment,
 	thread,

@@ -32,3 +32,10 @@ export const Username: IInputFieldProps = {
     name: "username",
     placeholder: "Enter Your Username",
 }
+
+export const Bio: IInputFieldProps = {
+    type: "text",
+    label: "Bio",
+    name: "bio",
+    placeholder: "Enter Your Bio",
+}

@@ -7,18 +7,18 @@ export async function GET(req: NextRequest) {
 	try {
 		const user = await verifyToken(req);
 		const { searchParams } = req.nextUrl;
-		const username = searchParams.get("username");
+		const userEmail = searchParams.get("email");
 
-		if (!username) {
+		if (!userEmail) {
 			return NextResponse.json({
 				success: false,
-				message: "Username is required",
+				message: "Email is required",
 			});
 		}
 
-		if (user.username == username) {
+		if (user.email === userEmail) {
 			const foundUser = await prisma.user.findFirst({
-				where: { id: user.id },
+				where: { email: user.email },
 				select: {
 					id: true,
 					name: true,
@@ -26,21 +26,30 @@ export async function GET(req: NextRequest) {
 					email: true,
 					bio: true,
 					profileImage: true,
-					comments: true,
-					threads: true,
+					comments: {
+						include: { sender: SENDER_SELECT },
+					},
+					threads: {
+						include: { author: SENDER_SELECT },
+						orderBy: { createdAt: "desc" },
+					},
 					followedBy: SENDER_SELECT,
 					following: SENDER_SELECT,
-					followRequests: true,
+					sentFollowRequests: true,
+					receivedFollowRequests: true,
 					totalFollowers: true,
 					totalFollowing: true,
 				},
 			});
+
+			if (!foundUser) {
+				return NextResponse.json({ success: false, message: "User not found" });
+			}
+
 			return NextResponse.json({ success: true, data: foundUser });
 		} else {
-			const foundUser = await prisma?.user.findFirst({
-				where: {
-					username: username,
-				},
+			const foundUser = await prisma.user.findFirst({
+				where: { email: user.email },
 				select: {
 					id: true,
 					name: true,
@@ -48,8 +57,17 @@ export async function GET(req: NextRequest) {
 					email: true,
 					bio: true,
 					profileImage: true,
-					comments: true,
-					threads: true,
+					comments: {
+						include: { sender: SENDER_SELECT },
+					},
+					threads: {
+						include: { author: SENDER_SELECT },
+						orderBy: { createdAt: "desc" },
+					},
+					followedBy: SENDER_SELECT,
+					following: SENDER_SELECT,
+					totalFollowers: true,
+					totalFollowing: true,
 				},
 			});
 
@@ -77,7 +95,7 @@ export async function PUT(req: NextRequest) {
 			});
 		}
 
-		const updatedUser = await prisma.user.update({
+		await prisma.user.update({
 			where: {
 				id: user.id,
 			},
@@ -89,7 +107,6 @@ export async function PUT(req: NextRequest) {
 		return NextResponse.json({
 			success: true,
 			message: "User updated successfully",
-			data: updatedUser,
 		});
 	} catch (error: any) {
 		console.log(error.message);

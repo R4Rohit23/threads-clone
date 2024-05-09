@@ -15,4 +15,38 @@
   .gradient-btn {
     @apply bg-gradient-to-r from-[#000000] to-[#434343] font-bold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out
   }
+
+  .white-btn {
+    @apply bg-white text-black hover:bg-white hover:text-black font-semibold text-base
+  }
+}
+
+*::-webkit-scrollbar {
+  height: 4px;
+  width: 4px;
+}
+*::-webkit-scrollbar-track {
+  border-radius: 5px;
+  background-color: #4B5563;
+}
+
+*::-webkit-scrollbar-track:hover {
+  background-color: #4B5563;
+}
+
+*::-webkit-scrollbar-track:active {
+  background-color: #4B5563;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: #b8c0c2;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #b8c0c2;
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background-color: #b8c0c2;
 }

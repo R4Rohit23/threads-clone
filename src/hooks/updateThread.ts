@@ -1,6 +1,7 @@
 import { APIHandler } from "@/server/ApiHandler";
 import ROUTES from "@/server/Routes";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 
 interface IUpdateThread {
@@ -10,11 +11,13 @@ interface IUpdateThread {
 
 export const useUpdateThread = () => {
 	const queryClient = useQueryClient();
+	const { data: session} = useSession();
 
 	const threadLike = useMutation({
 		mutationFn: likeThread,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["threads"] });
+			queryClient.invalidateQueries({ queryKey: ["userProfile", session?.user.email]});
 		},
 		onError: (error) => {
 			toast.error(error.message ?? "Error While Liking Thread");

@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { IoChatbubbleOutline } from "react-icons/io5";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { UserProfilePopover } from "../profile/UserProfileModal";
 
 interface IProps {
 	data: IThread;
@@ -15,7 +16,6 @@ interface IProps {
 
 const Thread = ({ data }: IProps) => {
 	const { updateThread } = useUpdateThread();
-	const { data: session } = useSession();
 
 	const [currentIndex, setCurrentIndex] = useState<number>(0);
 
@@ -44,7 +44,10 @@ const Thread = ({ data }: IProps) => {
 
 				<div className="flex flex-col gap-2 relative">
 					<div className="flex items-center gap-2">
-						<p>@{data?.author?.username} </p>
+						<UserProfilePopover userData={data.author}>
+							<p>@{data?.author?.username} </p>
+						</UserProfilePopover>
+
 						<p className="text-gray-400 text-sm">
 							{formatDate(data.createdAt)}
 						</p>
@@ -79,7 +82,7 @@ const Thread = ({ data }: IProps) => {
 											key={indx}
 											src={src}
 											alt="thumbnail"
-											className="w-full  object-cover rounded-lg"
+											className="max-w-sm max-h-96 object-cover rounded-lg"
 										/>
 									) : (
 										<video

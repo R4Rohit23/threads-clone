@@ -12,7 +12,7 @@ const TextAreaField: React.FC<Partial<PropTextField>> = (props) => {
 		<div>
 			<label
 				htmlFor="comment"
-				className="block text-xs sm:text-sm sm:font-medium leading-6 text-gray-900"
+				className="block text-xs sm:text-sm sm:font-medium leading-6 text-white"
 			>
 				{label}
 			</label>

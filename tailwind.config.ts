@@ -34,7 +34,8 @@ const config = {
 			},
       colors: {
         "dark-1": "#101010",
-        "dark-2": "#1e1e1e"
+        "dark-2": "#1e1e1e",
+		"main-grey": "#4B5563"
       },
 		},
 		

@@ -5,36 +5,46 @@ import { SENDER_SELECT } from "../config";
 
 export async function PUT(req: NextRequest) {
 	try {
-		const user = await verifyToken(req);
-		const { userId } = await req.json();
+		const { senderId, receiverId } = await req.json();
 
-		if (!userId) {
+		if (!senderId || !receiverId) {
 			return NextResponse.json({
 				success: false,
-				message: "Please provide Id of user to follow",
+				message: "Please provide senderId and receiverId",
 			});
 		}
 
-		const childUser = await prisma.user.findFirst({
+		const receiver = await prisma.user.findFirst({
 			where: {
-				id: userId,
+				id: receiverId,
 			},
 		});
 
-		const isAlreadyFollowed = user.followingIDs.includes(userId);
+		const sender = await prisma.user.findFirst({
+			where: { id: senderId}
+		});
+
+		if (!sender || !receiver) {
+			return NextResponse.json({
+                success: false,
+                message: "Either sender or receiver does not exist",
+            });
+		}
+
+		const isAlreadyFollowed = sender.followingIDs.includes(receiverId);
 
 		if (!isAlreadyFollowed) {
 			// Push the followed child user id into current user's following list and increment the following count
-			const updatedParentUser = await prisma.user.update({
+			const updatedSender = await prisma.user.update({
 				where: {
-					id: user.id,
+					id: senderId,
 				},
 				data: {
 					followingIDs: {
-						push: userId,
+						push: receiverId,
 					},
 					following: {
-						connect: { id: userId },
+						connect: { id: receiverId },
 					},
 					totalFollowing: { increment: 1 },
 				},
@@ -49,7 +59,7 @@ export async function PUT(req: NextRequest) {
 
 			// Only increment the followers count here as the parent users id is already appended to the child users followers list
 			await prisma.user.update({
-				where: { id: childUser?.id },
+				where: { id: receiverId },
 				data: {
 					totalFollowers: { increment: 1 },
 				},
@@ -58,20 +68,20 @@ export async function PUT(req: NextRequest) {
 			return NextResponse.json({
 				success: true,
 				message: "User followed successfully",
-				updatedParentUser,
+				data: updatedSender,
 			});
 		} else {
 			// Remove the child user's id from parentUser following list and decrement the totalFollowing count
-			const updatedParentUser = await prisma.user.update({
+			const updatedSender = await prisma.user.update({
 				where: {
-					id: user.id,
+					id: senderId,
 				},
 				data: {
 					followingIDs: {
-						set: user.followingIDs.filter((id) => id !== userId),
+						set: sender.followingIDs.filter((id) => id !== receiverId),
 					},
 					following: {
-						disconnect: { id: userId },
+						disconnect: { id: receiverId },
 					},
 					totalFollowing: { decrement: 1 },
 				},
@@ -84,17 +94,16 @@ export async function PUT(req: NextRequest) {
 				},
 			});
 
-			// Add the parent user's id into child user's followers list
-			const updatedChildUser = await prisma.user.update({
+			const updatedReceiver = await prisma.user.update({
 				where: {
-					id: userId,
+					id: receiverId,
 				},
 				data: {
 					followedByIDs: {
-						set: childUser?.followedByIDs.filter((id) => id !== user.id),
+						set: receiver?.followedByIDs.filter((id) => id !== senderId),
 					},
 					followedBy: {
-						disconnect: { id: user.id },
+						disconnect: { id: senderId },
 					},
 					totalFollowers: { decrement: 1 },
 				},
@@ -110,8 +119,8 @@ export async function PUT(req: NextRequest) {
 			return NextResponse.json({
 				success: true,
 				message: "User Unfollowed successfully",
-				updatedParentUser,
-				updatedChildUser,
+				updatedSender,
+				updatedReceiver,
 			});
 		}
 	} catch (error: any) {

@@ -1,6 +1,7 @@
 import { APIHandler } from "@/server/ApiHandler";
 import ROUTES from "@/server/Routes";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 
 interface IAddComment {
@@ -12,6 +13,7 @@ interface IAddComment {
 
 export const useComment = (props: IAddComment) => {
 	const queryClient = useQueryClient();
+	const { data: session } = useSession();
 
 	const parentComment = useMutation({
 		mutationFn: addParentComment,
@@ -38,8 +40,8 @@ export const useComment = (props: IAddComment) => {
 	const commentLike = useMutation({
 		mutationFn: likeCommentFunction,
 		onSuccess: () => {
-			console.log(props.commentId);
-			queryClient.invalidateQueries({ queryKey: ["commentById",props.commentId as string] });
+			queryClient.invalidateQueries({ queryKey: ["commentById", props.commentId as string] });
+			queryClient.invalidateQueries({ queryKey: ["userProfile", session?.user.email]});
 		},
 		onError: (error) => {
 			toast.error(error.message ?? "Error While Liking Comment");

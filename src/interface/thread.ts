@@ -1,8 +1,14 @@
 export interface IAuthor {
     id: string;
     name: string;
+    email: string;
     profileImage: string;
     username: string;
+    bio: string;
+    threads?: IThread[];
+    comments?: IComments[];
+    totalFollowers: number;
+    totalFollowing: number;
 }
 
 export interface IComments {
@@ -16,6 +22,7 @@ export interface IComments {
     createdAt: string;
     thumbnails?: string[];
     likedBy: string[];
+    threadId?: string;
 }
 
 export interface IThread {

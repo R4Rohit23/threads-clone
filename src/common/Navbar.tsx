@@ -25,9 +25,9 @@ const navLinks = [
 		href: "/thread/create",
 	},
 	{
-		name: "Likes",
+		name: "Activity",
 		icon: "/assets/favourite-stroke-rounded.svg",
-		href: "/my-likes",
+		href: "/activity",
 	},
 	{
 		name: "Profile",

@@ -42,3 +42,13 @@ export const checkIsImage = (src: string) => {
 	}
 	return false;
 };
+
+export const formatFollowCount = (count: number) => {
+	if (count < 1000) {
+        return count;
+    } else if (count < 1000000) {
+        return `${Math.floor(count / 1000)}k`;
+    } else {
+        return `${Math.floor(count / 1000000)}m`;
+    }
+}
