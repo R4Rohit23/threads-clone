@@ -1,22 +1,23 @@
-"use server";
-
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prismaClient";
 import { SENDER_SELECT } from "../../config";
-import { GetServerSideProps } from "next";
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+export async function GET(req: NextRequest) {
 	try {
-		const { id } = params || {};
+		const { searchParams } = new URL(req.url);;
+
+		const id = searchParams.get("id");
 
 		if (!id) {
-			return {
-				notFound: true,
-			};
+			return NextResponse.json({
+				success: false,
+				message: "Please provide thread id",
+			});
 		}
 
 		const thread = await prisma.thread.findFirst({
 			where: {
-				id: id as string,
+				id: id,
 			},
 			include: {
 				author: SENDER_SELECT,
@@ -32,27 +33,25 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 						totalComments: true,
 						parentCommentId: true,
 						createdAt: true,
-						likedBy: true,
+						likedBy: true
 					},
 				},
 			},
 		});
 
 		if (!thread) {
-			return {
-				notFound: true,
-			};
+			return NextResponse.json({
+				success: false,
+				message: "Thread not found",
+			});
 		}
 
-		return {
-			props: {
-				thread,
-			},
-		};
+		return NextResponse.json({
+			success: true,
+			data: thread,
+		});
 	} catch (error: any) {
 		console.log(error);
-		return {
-			notFound: true,
-		};
+		return NextResponse.json({ success: false, error: error.message });
 	}
-};
+}
