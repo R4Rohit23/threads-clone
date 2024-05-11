@@ -1,3 +1,5 @@
+"use server";
+
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prismaClient";
 import { SENDER_SELECT } from "../../config";
