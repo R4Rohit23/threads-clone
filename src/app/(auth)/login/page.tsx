@@ -113,7 +113,7 @@ const LoginPage = () => {
 						/>
 
 						<div className="capitalize text-sm text-gray-400 text-center">
-							don{`&apos`} t have an account. Please <Link href={"/register"} className="opacity-100 text-white">Register</Link>Here
+							don&apos;t have an account. Please <Link href={"/register"} className="opacity-100 text-white">Register</Link> Here
 						</div>
 					</form>
 				)}
