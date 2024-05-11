@@ -1,12 +1,12 @@
-import { NextAuthOptions } from "next-auth";
+import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
 import prisma from "@/lib/prismaClient";
 import toast from "react-hot-toast";
 
-export const authOptions: NextAuthOptions = {
-	providers: [
+const handler = NextAuth({  
+    providers: [
 		GoogleProvider({
 			clientId: process.env.GOOGLE_CLIENT_ID as string,
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
@@ -48,7 +48,7 @@ export const authOptions: NextAuthOptions = {
 			},
 		}),
 	],
-	debug: process.env.NODE_ENV !== "production",
+	debug: true,
 	secret: process.env.NEXTAUTH_SECRET,
 	session: {
 		strategy: "jwt",
@@ -124,4 +124,6 @@ export const authOptions: NextAuthOptions = {
 			return token;
 		},
 	},
-};
+});
+
+export { handler as GET, handler as POST};
