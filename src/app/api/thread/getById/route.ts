@@ -4,7 +4,7 @@ import prisma from "@/lib/prismaClient";
 import { SENDER_SELECT } from "../../config";
 import { GetServerSideProps } from "next";
 
-export const GET: GetServerSideProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 	try {
 		const { id } = params || {};
 
