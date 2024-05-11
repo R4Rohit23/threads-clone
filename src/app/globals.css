@@ -13,7 +13,7 @@
   }
 
   .gradient-btn {
-    @apply bg-gradient-to-r from-[#000000] to-[#434343] font-bold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out
+    @apply bg-gradient-to-r from-[#000000] to-[#434343] font-bold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out 
   }
 
   .white-btn {

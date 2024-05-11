@@ -1,3 +1,5 @@
+import { IAuthor, IFollowRequest } from "@/interface/thread";
+
 export function formatDate(dateString: string): string {
 	const today = new Date();
 	const inputDate = new Date(dateString);
@@ -6,7 +8,6 @@ export function formatDate(dateString: string): string {
 	const diffMinutes = Math.floor(diffSeconds / 60);
 	const diffHours = Math.floor(diffMinutes / 60);
 	const diffDays = Math.floor(diffHours / 24);
-
 
 	if (diffDays > 7) {
 		return inputDate.toLocaleDateString("en-US", {
@@ -45,10 +46,31 @@ export const checkIsImage = (src: string) => {
 
 export const formatFollowCount = (count: number) => {
 	if (count < 1000) {
-        return count;
-    } else if (count < 1000000) {
-        return `${Math.floor(count / 1000)}k`;
-    } else {
-        return `${Math.floor(count / 1000000)}m`;
-    }
-}
+		return count;
+	} else if (count < 1000000) {
+		return `${Math.floor(count / 1000)}k`;
+	} else {
+		return `${Math.floor(count / 1000000)}m`;
+	}
+};
+
+export const getRequestStatus = (
+	requests: IFollowRequest[],
+	followers: string[],
+	userId: string
+) => {
+	const isPresentInRequest = requests?.some(
+		(request) =>
+			request.senderId === userId && request.status === ("PENDING" as any)
+	);
+
+	const isPresentInFollowers = followers?.some(
+		(followerId) => followerId === userId
+	);
+
+	return isPresentInRequest
+		? "Requested"
+		: isPresentInFollowers
+		? "Unfollow"
+		: "Follow";
+};

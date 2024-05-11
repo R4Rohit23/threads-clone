@@ -11,7 +11,20 @@ export async function GET() {
 	try {
 		const threads = await prisma.thread.findMany({
 			include: {
-				author: SENDER_SELECT,
+				author: {
+					select: {
+						id: true,
+						username: true,
+						name: true,
+						profileImage: true,
+						bio: true,
+						totalFollowers: true,
+						totalFollowing: true,
+						receivedFollowRequests: true,
+						followedByIDs: true,
+						followingIDs: true,
+					},
+				},
 				comments: {
 					where: { parentCommentId: null },
 					select: {
@@ -130,7 +143,7 @@ const handleThreadLike = async (user: User, threadId: string) => {
 			return NextResponse.json({
 				success: true,
 				message: "Thread Unliked Successfully",
-				updatedThread
+				updatedThread,
 			});
 		} else {
 			const updateThread = await prisma.thread.update({

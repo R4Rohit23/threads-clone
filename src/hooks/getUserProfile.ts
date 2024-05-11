@@ -4,21 +4,21 @@ import ROUTES from "@/server/Routes";
 import { useQuery } from "@tanstack/react-query";
 
 interface IProps {
-	email: string;
+	username: string;
 }
 
-export const userGetUserProfile = ({ email }: IProps) => {
+export const userGetUserProfile = ({ username }: IProps) => {
 	const fetchProfile = async () => {
 		const { data } = await APIHandler(
 			"GET",
-			ROUTES.PROFILE.USER_PROFILE + `?email=${email}`
+			ROUTES.PROFILE.USER_PROFILE + `?username=${username}`
 		);
 
 		return data.data;
 	};
 
 	const { data, isLoading, isError, error } = useQuery<IAuthor>({
-		queryKey: ["userProfile", email],
+		queryKey: ["userProfile", username],
 		queryFn: fetchProfile,
 	});
 

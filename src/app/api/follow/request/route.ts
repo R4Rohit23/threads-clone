@@ -2,12 +2,11 @@ import { verifyToken } from "@/validation/verifyToken";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prismaClient";
 import { APIHandler } from "@/server/ApiHandler";
-import ROUTES from "@/server/Routes";
 
 export async function POST(req: NextRequest) {
 	try {
 		const { id: senderId } = await verifyToken(req);
-		const { userId: receiverId } = await req.json();
+		const { receiverId } = await req.json();
 
 		if (!receiverId) {
 			return NextResponse.json({
@@ -34,6 +33,7 @@ export async function POST(req: NextRequest) {
 			where: {
 				receiverId,
 				senderId,
+				status: "PENDING"
 			},
 		});
 
@@ -68,8 +68,7 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
 	try {
-		const { id: senderId } = await verifyToken(req);
-		const { userId: receiverId, status } = await req.json();
+		const { senderId, receiverId , status } = await req.json();
 
 		if (!receiverId) {
 			return NextResponse.json({
@@ -96,6 +95,7 @@ export async function PUT(req: NextRequest) {
 				where: {
 					receiverId: receiverId,
 					senderId: senderId,
+					status: "PENDING"
 				},
 			});
 

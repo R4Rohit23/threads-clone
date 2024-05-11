@@ -24,9 +24,10 @@ const ProfilePage = () => {
 		isLoading,
 		isError,
 		error,
-	} = userGetUserProfile({ email: session?.user.email as string });
+	} = userGetUserProfile({ username: session?.user.username as string });
 
 	if (!isLoading && isError) {
+		console.log(error);
 		return toast.error("Error While Fetching Profile");
 	}
 

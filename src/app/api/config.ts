@@ -6,6 +6,6 @@ export const SENDER_SELECT = {
         profileImage: true,
         bio: true,
         totalFollowers: true,
-        totalFollowing: true
+        totalFollowing: true,
     },
 }

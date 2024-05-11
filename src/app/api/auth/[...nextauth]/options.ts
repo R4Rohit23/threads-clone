@@ -109,6 +109,7 @@ export const authOptions: NextAuthOptions = {
 
 			if (account && profile) {
 				token.accessToken = account.access_token;
+				token.username = profile.name;
 				const dbUser = await prisma.user.findUnique({
 					where: {
 						email: profile?.email,

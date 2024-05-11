@@ -88,7 +88,7 @@ const ThreadById = () => {
 														key={indx}
 														src={src}
 														alt="thumbnail"
-														className="w-full h-full object-cover rounded-lg"
+														className="max-w-sm max-h-96 object-cover rounded-lg"
 														loading="lazy"
 													/>
 												) : (

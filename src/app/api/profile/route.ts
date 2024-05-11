@@ -7,18 +7,18 @@ export async function GET(req: NextRequest) {
 	try {
 		const user = await verifyToken(req);
 		const { searchParams } = req.nextUrl;
-		const userEmail = searchParams.get("email");
+		const username = searchParams.get("username");
 
-		if (!userEmail) {
+		if (!username) {
 			return NextResponse.json({
 				success: false,
-				message: "Email is required",
+				message: "Username is required",
 			});
 		}
 
-		if (user.email === userEmail) {
+		if (user.username === username) {
 			const foundUser = await prisma.user.findFirst({
-				where: { email: user.email },
+				where: { username },
 				select: {
 					id: true,
 					name: true,
@@ -35,8 +35,18 @@ export async function GET(req: NextRequest) {
 					},
 					followedBy: SENDER_SELECT,
 					following: SENDER_SELECT,
-					sentFollowRequests: true,
-					receivedFollowRequests: true,
+					sentFollowRequests: {
+						where: { status: "PENDING"},
+						include: {
+							sender: SENDER_SELECT
+						}
+					},
+					receivedFollowRequests: {
+						where: { status: "PENDING"},
+						include: {
+							sender: SENDER_SELECT
+						}
+					},
 					totalFollowers: true,
 					totalFollowing: true,
 				},
@@ -49,7 +59,7 @@ export async function GET(req: NextRequest) {
 			return NextResponse.json({ success: true, data: foundUser });
 		} else {
 			const foundUser = await prisma.user.findFirst({
-				where: { email: user.email },
+				where: { username },
 				select: {
 					id: true,
 					name: true,
@@ -66,6 +76,18 @@ export async function GET(req: NextRequest) {
 					},
 					followedBy: SENDER_SELECT,
 					following: SENDER_SELECT,
+					sentFollowRequests: {
+						where: { status: "PENDING"},
+						include: {
+							sender: SENDER_SELECT
+						}
+					},
+					receivedFollowRequests: {
+						where: { status: "PENDING"},
+						include: {
+							sender: SENDER_SELECT
+						}
+					},
 					totalFollowers: true,
 					totalFollowing: true,
 				},

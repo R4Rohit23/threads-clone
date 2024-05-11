@@ -44,9 +44,11 @@ const Thread = ({ data }: IProps) => {
 
 				<div className="flex flex-col gap-2 relative">
 					<div className="flex items-center gap-2">
-						<UserProfilePopover userData={data.author}>
-							<p>@{data?.author?.username} </p>
-						</UserProfilePopover>
+						<Link href={`/${data.author.username}`}>
+							<UserProfilePopover userData={data.author}>
+								<p>@{data?.author?.username} </p>
+							</UserProfilePopover>
+						</Link>
 
 						<p className="text-gray-400 text-sm">
 							{formatDate(data.createdAt)}

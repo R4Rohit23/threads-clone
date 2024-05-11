@@ -9,6 +9,10 @@ export interface IAuthor {
     comments?: IComments[];
     totalFollowers: number;
     totalFollowing: number;
+    receivedFollowRequests: IFollowRequest[];
+    sentFollowRequests: IFollowRequest[];
+    followedByIDs: string[];
+    followingIDs: string[];
 }
 
 export interface IComments {
@@ -35,4 +39,20 @@ export interface IThread {
     totalComments: number;
     totalLikes: number;
     thumbnails?: string[];
+}
+
+export interface IFollowRequest {
+    id: string;
+    sender: IAuthor;
+    senderId: string;
+    receiver: IAuthor,
+    receiverId: string;
+    status: Status,
+    createdAt: string;
+}
+
+enum Status {
+    ACCEPTED,
+    PENDING,
+    REJECTED
 }

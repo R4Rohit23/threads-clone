@@ -6,7 +6,7 @@ import InputField from "@/common/InputField";
 import { Email, Password } from "@/utils/InputFields";
 import { VEmail, VPassword } from "@/validation/InputField";
 import { Formik } from "formik";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FaGoogle } from "react-icons/fa";
 import * as Yup from "yup";
 import { signIn, useSession } from "next-auth/react";
@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 
 const LoginPage = () => {
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const router = useRouter();
 	
 	const inputFields = [Email, Password];
@@ -87,7 +88,6 @@ const LoginPage = () => {
 							type="submit"
 							text="Submit"
 							disabled={isSubmitting}
-							className="gradient-btn hover:scale-110 transition-transform duration-300"
 							loading={isSubmitting}
 						/>
 
@@ -100,13 +100,15 @@ const LoginPage = () => {
 						<ButtonField
 							type="button"
 							text="Continue With Google"
-							className="gradient-btn w-full hover:scale-110 transition-transform duration-300"
+							loading={isLoading}
 							Icon={FaGoogle}
 							handleFunction={async () => {
+								setIsLoading(true);
 								await signIn("google", {
                                     callbackUrl: "/",
                                     redirect: false
                                 });
+								setIsLoading(false);
 							}}
 						/>
 
