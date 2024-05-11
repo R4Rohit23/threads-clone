@@ -7,7 +7,7 @@ import EditProfile from "@/components/profile/EditProfile";
 import UserComments from "@/components/profile/UserComments";
 import UserThreads from "@/components/profile/UserThreads";
 import { useUpdateFollowRequest } from "@/hooks/followRequest";
-import { userGetUserProfile } from "@/hooks/getUserProfile";
+import { useGetUserProfile } from "@/hooks/getUserProfile";
 import {
 	IAuthor,
 	IComments,
@@ -36,14 +36,14 @@ const ProfilePage = () => {
 		isLoading: userLoading,
 		isError,
 		error,
-	} = userGetUserProfile({ username: username as string });
+	} = useGetUserProfile({ username: username as string });
 
 	const {
 		data: parentUserData,
 		isLoading: parentUserLoading,
 		isError: isParentUserError,
 		error: parentUserError,
-	} = userGetUserProfile({ username: session?.user.username as string });
+	} = useGetUserProfile({ username: session?.user.username as string });
 
 	if (!isLoading && isError) {
 		console.log(error);

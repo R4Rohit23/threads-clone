@@ -6,7 +6,7 @@ import Loader from "@/common/Loader";
 import EditProfile from "@/components/profile/EditProfile";
 import UserComments from "@/components/profile/UserComments";
 import UserThreads from "@/components/profile/UserThreads";
-import { userGetUserProfile } from "@/hooks/getUserProfile";
+import { useGetUserProfile } from "@/hooks/getUserProfile";
 import { IAuthor, IComments, IThread } from "@/interface/thread";
 import { formatFollowCount } from "@/utils/reusableFunctions";
 import { useSession } from "next-auth/react";
@@ -24,7 +24,7 @@ const ProfilePage = () => {
 		isLoading,
 		isError,
 		error,
-	} = userGetUserProfile({ username: session?.user.username as string });
+	} = useGetUserProfile({ username: session?.user.username as string });
 
 	if (!isLoading && isError) {
 		console.log(error);
@@ -95,7 +95,7 @@ const ProfilePage = () => {
 					{activeNav === "Threads" ? (
 						<UserThreads data={userData?.threads as IThread[]} />
 					) : (
-						<UserComments comments={userData?.comments as IComments[]}/>
+						<UserComments comments={userData?.comments as IComments[]} />
 					)}
 				</div>
 			)}
@@ -105,13 +105,12 @@ const ProfilePage = () => {
 				setIsOpen={setIsProfileEditOpen}
 				dialogTitle="Edit Profile"
 				dialogDescription="Make changes to your profile here. Click save when you're done."
-				children={
-					<EditProfile
-						profileData={userData as IAuthor}
-						close={setIsProfileEditOpen}
-					/>
-				}
-			/>
+			>
+				<EditProfile
+					profileData={userData as IAuthor}
+					close={setIsProfileEditOpen}
+				/>
+			</DialogBox>
 		</div>
 	);
 };

@@ -7,7 +7,7 @@ interface IProps {
 	username: string;
 }
 
-export const userGetUserProfile = ({ username }: IProps) => {
+export const useGetUserProfile = ({ username }: IProps) => {
 	const fetchProfile = async () => {
 		const { data } = await APIHandler(
 			"GET",

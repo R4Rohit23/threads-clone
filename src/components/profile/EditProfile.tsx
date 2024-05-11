@@ -105,7 +105,7 @@ const EditProfile = ({ profileData, close }: IProps) => {
 								/>
 
 								{inputFields.map((inp, indx) => (
-									<div>
+									<div key={indx}>
 										{inp.name === "bio" ? (
 											<div className="space-y-1">
 												<TextAreaField

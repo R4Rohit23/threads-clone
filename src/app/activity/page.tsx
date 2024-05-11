@@ -1,7 +1,7 @@
 "use client";
 import Loader from "@/common/Loader";
 import FollowRequests from "@/components/profile/FollowRequests";
-import { userGetUserProfile } from "@/hooks/getUserProfile";
+import { useGetUserProfile } from "@/hooks/getUserProfile";
 import { IFollowRequest } from "@/interface/thread";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
@@ -16,7 +16,7 @@ const ActivityPage = () => {
 		isLoading,
 		isError,
 		error,
-	} = userGetUserProfile({ email: session?.user.email as string });
+	} = useGetUserProfile({ username: session?.user.username as string });
 
 	if (!isLoading && isError) {
 		console.log(error);

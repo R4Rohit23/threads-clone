@@ -104,7 +104,7 @@ const LoginPage = () => {
 						/>
 
 						{inputFields.map((inp, indx) => (
-							<div className="space-y-1">
+							<div className="space-y-1" key={indx}>
 								<InputField
 									key={indx}
 									name={inp.name}

@@ -66,7 +66,7 @@ const LoginPage = () => {
 				}) => (
 					<form onSubmit={handleSubmit} className="space-y-5">
 						{inputFields.map((inp, indx) => (
-							<div className="space-y-1">
+							<div className="space-y-1" key={indx}>
 								<InputField
 									key={indx}
 									name={inp.name}
@@ -113,7 +113,7 @@ const LoginPage = () => {
 						/>
 
 						<div className="capitalize text-sm text-gray-400 text-center">
-							don't have an account. Please <Link href={"/register"} className="opacity-100 text-white">Register</Link>  Here
+							don{`&apos`} t have an account. Please <Link href={"/register"} className="opacity-100 text-white">Register</Link>Here
 						</div>
 					</form>
 				)}

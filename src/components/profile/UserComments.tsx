@@ -12,7 +12,7 @@ const UserComments = ({ comments }: IProps) => {
 			{comments &&
 				comments.length > 0 &&
 				comments.map((comment) => (
-					<CommentComponent isReply={false} comment={comment} threadId={comment.threadId} commentId={comment.id} />
+					<CommentComponent isReply={false} comment={comment} threadId={comment.threadId} commentId={comment.id} key={comment.id}/>
 				))}
 		</div>
 	);
