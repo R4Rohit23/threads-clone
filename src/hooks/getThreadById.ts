@@ -11,7 +11,7 @@ export const useGetThreadById = ({ threadId }: IProps) => {
 	const fetchThread = async () => {
 		const { data } = await APIHandler(
 			"GET",
-			ROUTES.GET_THREAD_BY_ID + `/?id=${threadId}`
+			ROUTES.GET_THREAD_BY_ID + `/${threadId}`
 		);
 		return data.data;
 	};

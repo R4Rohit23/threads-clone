@@ -2,11 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prismaClient";
 import { SENDER_SELECT } from "../../config";
 
-export async function GET(req: NextRequest) {
+export async function GET(
+	req: NextRequest,
+	{ params }: { params: { id: string } }
+) {
 	try {
-		const { searchParams } = new URL(req.url);;
-
-		const id = searchParams.get("id");
+		const id = params.id;
 
 		if (!id) {
 			return NextResponse.json({
@@ -33,7 +34,7 @@ export async function GET(req: NextRequest) {
 						totalComments: true,
 						parentCommentId: true,
 						createdAt: true,
-						likedBy: true
+						likedBy: true,
 					},
 				},
 			},

@@ -60,7 +60,7 @@ const ProfilePage = () => {
 							{" "}
 							{formatFollowCount(
 								userData?.totalFollowers as number
-							)} followers{" "}
+							)}
 						</p>
 						<div>
 							{session?.user.id === userData?.id ? (

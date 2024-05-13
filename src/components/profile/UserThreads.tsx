@@ -11,7 +11,9 @@ const UserThreads = ({ data }: IProps) => {
 		<div>
 			{data &&
 				data.length > 0 &&
-				data.map((thread) => <Thread data={thread} key={thread.id} />)}
+				data.map((thread) => (
+					<Thread data={thread} key={thread.id} />
+				))}
 		</div>
 	);
 };

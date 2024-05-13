@@ -20,9 +20,6 @@ export async function GET() {
 						bio: true,
 						totalFollowers: true,
 						totalFollowing: true,
-						receivedFollowRequests: true,
-						followedByIDs: true,
-						followingIDs: true,
 					},
 				},
 				comments: {

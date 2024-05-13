@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
 interface IProps {
-    userEmail?: string;
+    username?: string;
 }
 
 interface IFollowRequest {
@@ -13,13 +13,13 @@ interface IFollowRequest {
     status?: "ACCEPTED" | "REJECTED" | "PENDING";
 }
 
-export const useUpdateFollowRequest = ({userEmail}: IProps) => {
+export const useUpdateFollowRequest = ({username}: IProps) => {
     const queryClient = useQueryClient();
 
     const sendFollowRequestMutation = useMutation({
         mutationFn: sentFollowRequestFunction,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["userProfile", userEmail]});
+            queryClient.invalidateQueries({ queryKey: ["userProfile", username]});
             queryClient.invalidateQueries({ queryKey: ["threads"]});
         },
         onError: (error) => {
@@ -31,7 +31,7 @@ export const useUpdateFollowRequest = ({userEmail}: IProps) => {
     const acceptOrRejectFollowRequest = useMutation({
 		mutationFn: acceptFollowRequestFunction,
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["userProfile", userEmail]});
+			queryClient.invalidateQueries({ queryKey: ["userProfile", username]});
 		},
 		onError: (error) => {
 			toast.error(error.message ?? "Error While accepting follow request");
@@ -42,7 +42,7 @@ export const useUpdateFollowRequest = ({userEmail}: IProps) => {
     const unFollow = useMutation({
         mutationFn: unFollowFunction,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["userProfile", userEmail]});
+            queryClient.invalidateQueries({ queryKey: ["userProfile", username]});
             queryClient.invalidateQueries({ queryKey: ["threads"]});
         },
         onError: (error) => {

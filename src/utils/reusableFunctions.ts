@@ -15,7 +15,7 @@ export function formatDate(dateString: string): string {
 			month: "long",
 			day: "numeric",
 		});
-	} else if (diffDays > 1) {
+	} else if (diffDays >= 1) {
 		return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
 	} else if (diffHours >= 1)
 		return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
@@ -46,31 +46,33 @@ export const checkIsImage = (src: string) => {
 
 export const formatFollowCount = (count: number) => {
 	if (count < 1000) {
-		return count;
+		return `${count <= 2 ? count + " follower" : count + " followers"}`;
 	} else if (count < 1000000) {
-		return `${Math.floor(count / 1000)}k`;
+		return `${Math.floor(count / 1000)}k followers`;
 	} else {
-		return `${Math.floor(count / 1000000)}m`;
+		return `${Math.floor(count / 1000000)}m followers`;
 	}
 };
 
 export const getRequestStatus = (
 	requests: IFollowRequest[],
-	followers: string[],
+	following: string[],
 	userId: string
 ) => {
+	// Check if child user id is present inside my sentRequests object
 	const isPresentInRequest = requests?.some(
 		(request) =>
-			request.senderId === userId && request.status === ("PENDING" as any)
+			request.receiverId === userId && request.status === ("PENDING" as any)
 	);
 
-	const isPresentInFollowers = followers?.some(
-		(followerId) => followerId === userId
+	// Check child user id is present inside my following list
+	const isPresentInFollowing = following?.some(
+		(followingId) => followingId === userId
 	);
 
 	return isPresentInRequest
 		? "Requested"
-		: isPresentInFollowers
+		: isPresentInFollowing
 		? "Unfollow"
 		: "Follow";
 };

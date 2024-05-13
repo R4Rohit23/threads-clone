@@ -62,7 +62,7 @@ const EditProfile = ({ profileData, close }: IProps) => {
 									setSubmitting(false);
 								} else {
 									queryClient.invalidateQueries({
-										queryKey: ["userProfile", profileData.email],
+										queryKey: ["userProfile", profileData.username],
 									});
 									toast.success(data.message ?? "Successfully Registered");
 									setSubmitting(false);

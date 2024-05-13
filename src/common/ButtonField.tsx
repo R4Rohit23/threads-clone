@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import React from "react";
 import Spinner from "./Spinner";
+import { cn } from "@/lib/utils";
 
 interface PropButton extends HTMLButtonElement {
 	iconStyle?: string;
@@ -32,9 +33,10 @@ const ButtonField: React.FC<Partial<PropButton>> = (props) => {
 		<div>
 			<Button
 				type={type}
-				className={`${className ? className : "gradient-btn"} flex items-center gap-4 justify-center  sm:p-3 text-xs sm:text-sm  ${
-					width ? width : "w-full"
-				} ${padding ? padding : "px-2 py-1 sm:px-3.5 sm:py-1"}`}
+				// className={`${className ? className : "gradient-btn"} flex items-center gap-4 justify-center  sm:p-3 text-xs sm:text-sm  ${
+				// 	width ? width : "w-full"
+				// } ${padding ? padding : "px-2 py-1 sm:px-3.5 sm:py-1"}`}
+				className={cn(className, "flex items-center gap-4 justify-center  w-full px-2")}
 				onClick={handleFunction}
 				disabled={loading || disabled}
 			>

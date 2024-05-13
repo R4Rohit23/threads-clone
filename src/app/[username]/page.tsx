@@ -28,7 +28,7 @@ const ProfilePage = () => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	const { sendFollowRequest, unFollowUser } = useUpdateFollowRequest({
-		userEmail: session?.user.email as string,
+		username: session?.user.username as string,
 	});
 
 	const {
@@ -59,9 +59,9 @@ const ProfilePage = () => {
 	console.log(parentUserData);
 
 	const followStatus = getRequestStatus(
-		userData?.receivedFollowRequests as IFollowRequest[],
-		userData?.followedByIDs as string[],
-		session?.user.id as string
+		parentUserData?.sentFollowRequests as IFollowRequest[],
+		parentUserData?.followingIDs as string[],
+		userData?.id as string
 	);
 
 	const handleFollowUnfollow = async () => {
@@ -109,12 +109,12 @@ const ProfilePage = () => {
 							{" "}
 							{formatFollowCount(
 								userData?.totalFollowers as number
-							)} followers{" "}
+							)}
 						</p>
 						<div>
 							<ButtonField
 								text={followStatus}
-								className="bg-white text-black hover:bg-white hover:text-black font-semibold text-base"
+								className="bg-white text-black hover:bg-white hover:text-black font-semibold text-sm"
 								disabled={followStatus === "Requested"}
 								loading={isLoading}
 								handleFunction={handleFollowUnfollow}
@@ -137,7 +137,7 @@ const ProfilePage = () => {
 					</nav>
 
 					{activeNav === "Threads" ? (
-						<UserThreads data={userData?.threads as IThread[]} />
+						<UserThreads data={userData?.threads as IThread[]}/>
 					) : (
 						<UserComments comments={userData?.comments as IComments[]} />
 					)}

@@ -15,6 +15,7 @@ interface IProps {
 }
 
 const Thread = ({ data }: IProps) => {
+	const { data: session } = useSession();
 	const { updateThread } = useUpdateThread();
 
 	const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -44,20 +45,20 @@ const Thread = ({ data }: IProps) => {
 
 				<div className="flex flex-col gap-2 relative">
 					<div className="flex items-center gap-2">
-						<Link href={`/${data.author.username}`}>
+						<Link href={`/${data?.author?.username}`}>
 							<UserProfilePopover userData={data.author}>
 								<p>@{data?.author?.username} </p>
 							</UserProfilePopover>
 						</Link>
 
 						<p className="text-gray-400 text-sm">
-							{formatDate(data.createdAt)}
+							{formatDate(data?.createdAt)}
 						</p>
 					</div>
 					<div>
 						<p
 							className="text-white text-base"
-							dangerouslySetInnerHTML={{ __html: data.title }}
+							dangerouslySetInnerHTML={{ __html: data?.title }}
 						/>
 					</div>
 					<div className="flex items-center justify-center">

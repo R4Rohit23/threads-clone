@@ -19,7 +19,7 @@ const HomePage = () => {
 			{isLoading ? (
 				<Loader />
 			) : (
-				<div className="text-white mx-auto max-w-3xl mt-10 flex flex-col bg-dark-1">
+				<div className="text-white mx-auto max-w-3xl flex flex-col bg-dark-1">
 					{data?.map((thread: IThread) => (
 						<Thread data={thread} key={thread.id} />
 					))}

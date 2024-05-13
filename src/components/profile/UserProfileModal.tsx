@@ -8,7 +8,8 @@ import {
 	PopoverTrigger,
 } from "@/components/ui/popover";
 import { useUpdateFollowRequest } from "@/hooks/followRequest";
-import { IAuthor } from "@/interface/thread";
+import { useGetUserProfile } from "@/hooks/getUserProfile";
+import { IAuthor, IFollowRequest } from "@/interface/thread";
 import { getRequestStatus, formatFollowCount } from "@/utils/reusableFunctions";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -16,31 +17,34 @@ import React, { useState } from "react";
 
 interface IProps {
 	children: React.ReactNode;
-	userData: IAuthor;
+	userData?: IAuthor;
 }
 
 export function UserProfilePopover({ children, userData }: IProps) {
 	const { data: session } = useSession();
+	const { data: myProfile } = useGetUserProfile({
+		username: session?.user.username as string,
+	});
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const { sendFollowRequest, unFollowUser } = useUpdateFollowRequest({});
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
-	console.log(userData);
+	const IS_MINE = session?.user.id === userData?.id ? true : false;
 
 	const followStatus = getRequestStatus(
-		userData.receivedFollowRequests,
-		userData.followedByIDs,
-		session?.user.id as string
+		myProfile?.sentFollowRequests as IFollowRequest[],
+		myProfile?.followingIDs as string[],
+		userData?.id as string
 	);
 
 	const handleFollowUnfollow = async () => {
 		setIsLoading(true);
 		if (followStatus === "Follow") {
-			await sendFollowRequest({ receiverId: userData.id });
+			await sendFollowRequest({ receiverId: userData?.id as string });
 		} else {
 			await unFollowUser({
 				senderId: session?.user.id,
-				receiverId: userData.id,
+				receiverId: userData?.id as string,
 			});
 		}
 		setIsLoading(false);
@@ -58,15 +62,19 @@ export function UserProfilePopover({ children, userData }: IProps) {
 				<div className="grid grid-cols-2 gap-4 items-center">
 					<div className="space-y-1">
 						<h4 className="font-medium leading-none text-lg">
-							{userData?.name}
+							{IS_MINE ? session?.user.name : userData?.name}
 						</h4>
 						<p className="text-sm text-muted-foreground">
-							@{userData?.username}
+							@{IS_MINE ? session?.user.username : userData?.username}
 						</p>
 					</div>
 					<div className="justify-self-end">
 						<Image
-							src={userData?.profileImage}
+							src={
+								IS_MINE
+									? (session?.user?.profileImage as string)
+									: (userData?.profileImage as string)
+							}
 							width={500}
 							height={500}
 							className="w-20 h-20 rounded-full object-cover"
@@ -78,9 +86,14 @@ export function UserProfilePopover({ children, userData }: IProps) {
 					<p className="text-sm ">{userData?.bio}</p>
 					<p className="text-sm text-main-grey">
 						{" "}
-						{formatFollowCount(userData?.totalFollowers)} followers{" "}
+						{formatFollowCount(
+							IS_MINE
+								? (myProfile?.totalFollowers as number)
+								: (userData?.totalFollowers as number)
+						)}{" "}
+						followers{" "}
 					</p>
-					{session?.user.id !== userData?.id && (
+					{!IS_MINE && (
 						<ButtonField
 							text={followStatus}
 							className="bg-white text-black hover:bg-white hover:text-black font-semibold text-base"

@@ -12,7 +12,7 @@ interface PropTextField extends HTMLInputElement {
 	handleFunction: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	handleBlur: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	handlePassword?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-	Icon?: React.ElementType;
+	Icon?: React.ReactNode;
 }
 
 const InputField: React.FC<Partial<PropTextField>> = (props) => {

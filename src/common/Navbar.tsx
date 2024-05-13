@@ -145,7 +145,10 @@ export default function Navbar() {
 															"block px-4 py-2 text-sm text-gray-500 hover:text-red-600"
 														)}
 														onClick={() => {
-															signOut();
+															signOut({
+																callbackUrl: "/",
+																redirect: true,
+															});
 														}}
 													>
 														Sign out

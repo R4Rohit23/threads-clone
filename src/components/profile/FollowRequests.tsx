@@ -4,7 +4,7 @@ import { IAuthor, IFollowRequest } from "@/interface/thread";
 import { formatDate } from "@/utils/reusableFunctions";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 
 interface IProps {
 	followRequests: IFollowRequest[];
@@ -12,9 +12,11 @@ interface IProps {
 
 const FollowRequests = ({ followRequests }: IProps) => {
 	const { data: session } = useSession();
+	const [isAcceptLoading, setIsAcceptLoading] = useState(false);
+	const [isRejectLoading, setIsRejectLoading] = useState(false);
 
   const { updateFollowRequest } = useUpdateFollowRequest({
-    userEmail: session?.user.email as string,
+    username: session?.user.username as string,
   });
 
 	const handleAccept = async (
@@ -22,13 +24,15 @@ const FollowRequests = ({ followRequests }: IProps) => {
 		receiverId: string,
 		status: "ACCEPTED" | "REJECTED" | "PENDING"
 	) => {
-    
+		status === "ACCEPTED" ? setIsAcceptLoading(true) : setIsRejectLoading(true);
+
 		await updateFollowRequest({
 			senderId,
 			receiverId,
 			status,
 		});
-
+		
+		status === "ACCEPTED" ? setIsAcceptLoading(false) : setIsRejectLoading(false);
 	};
 
 	return (
@@ -60,12 +64,14 @@ const FollowRequests = ({ followRequests }: IProps) => {
 								text="Accept"
 								className="bg-white text-black hover:bg-white hover:text-black font-semibold text-base"
 								handleFunction={() =>
-									handleAccept(request.senderId, request.receiverId, "ACCEPTED")
+									handleAccept(request.senderId, session?.user.id as string, "ACCEPTED")
 								}
+								loading={isAcceptLoading}
 							/>
 							<ButtonField
 								text="Reject"
 								className="bg-dark text-white hover:bg-dark hover:text-white font-semibold text-base border"
+								loading={isRejectLoading}
 							/>
 						</div>
 					</div>

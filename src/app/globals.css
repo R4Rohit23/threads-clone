@@ -19,6 +19,10 @@
   .white-btn {
     @apply bg-white text-black hover:bg-white hover:text-black font-semibold text-base
   }
+
+  .profile {
+    @apply rounded-full object-cover w-10 h-10
+  }
 }
 
 *::-webkit-scrollbar {

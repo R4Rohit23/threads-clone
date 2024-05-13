@@ -6,7 +6,7 @@ import { SENDER_SELECT } from "../config";
 export async function GET(req: NextRequest) {
 	try {
 		const user = await verifyToken(req);
-		const { searchParams } = req.nextUrl;
+		const { searchParams } = new URL(req.url);
 		const username = searchParams.get("username");
 
 		if (!username) {
@@ -26,26 +26,38 @@ export async function GET(req: NextRequest) {
 					email: true,
 					bio: true,
 					profileImage: true,
-					comments: {
-						include: { sender: SENDER_SELECT },
-					},
+					comments: true,
 					threads: {
-						include: { author: SENDER_SELECT },
+						select: {
+							id: true,
+							author: SENDER_SELECT,
+							title: true,
+							thumbnails: true,
+							totalLikes: true,
+							totalComments: true,
+							likedBy: true,
+							createdAt: true,
+						},
 						orderBy: { createdAt: "desc" },
 					},
-					followedBy: SENDER_SELECT,
-					following: SENDER_SELECT,
 					sentFollowRequests: {
 						where: { status: "PENDING"},
-						include: {
-							sender: SENDER_SELECT
-						}
+						select: {
+							id: true,
+							receiverId: true,
+							status: true,
+							createdAt: true,
+						},
 					},
 					receivedFollowRequests: {
 						where: { status: "PENDING"},
-						include: {
-							sender: SENDER_SELECT
-						}
+						select: {
+							id: true,
+							senderId: true,
+							sender: SENDER_SELECT,
+							status: true,
+							createdAt: true,
+						},
 					},
 					totalFollowers: true,
 					totalFollowing: true,
@@ -67,26 +79,37 @@ export async function GET(req: NextRequest) {
 					email: true,
 					bio: true,
 					profileImage: true,
-					comments: {
-						include: { sender: SENDER_SELECT },
-					},
+					comments: true,
 					threads: {
-						include: { author: SENDER_SELECT },
+						select: {
+							id: true,
+							author: SENDER_SELECT,
+							title: true,
+							thumbnails: true,
+							totalLikes: true,
+							totalComments: true,
+							likedBy: true,
+							createdAt: true,
+						},
 						orderBy: { createdAt: "desc" },
 					},
-					followedBy: SENDER_SELECT,
-					following: SENDER_SELECT,
 					sentFollowRequests: {
 						where: { status: "PENDING"},
-						include: {
-							sender: SENDER_SELECT
-						}
+						select: {
+							id: true,
+							receiverId: true,
+							status: true,
+							createdAt: true,
+						},
 					},
 					receivedFollowRequests: {
 						where: { status: "PENDING"},
-						include: {
-							sender: SENDER_SELECT
-						}
+						select: {
+							id: true,
+							senderId: true,
+							status: true,
+							createdAt: true,
+						},
 					},
 					totalFollowers: true,
 					totalFollowing: true,

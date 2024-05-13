@@ -4,10 +4,11 @@ const ROUTES = {
 		REGISTER: "/api/auth/register",
 	},
 	THREAD: "/api/thread",
-	GET_THREAD_BY_ID: "/api/thread/getById",
+	GET_THREAD_BY_ID: "/api/thread",
 	COMMENT: "/api/comment",
 	PROFILE: {
-		USER_PROFILE: "/api/profile"
+		USER_PROFILE: "/api/profile",
+		SEARCH_USER: "/api/profile/search"
 	},
 	FOLLOW: {
 		FOLLOW: "/api/follow",
