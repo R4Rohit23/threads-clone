@@ -182,7 +182,7 @@ const EditPopover = ({ thread }: { thread: IThread }) => {
 		setIsDeleting(true);
 		await updateThread({ type: "threadDelete", threadId: thread.id });
 		setIsDeleting(false);
-	}
+	};
 
 	return (
 		<div className="flex flex-col gap-2 text-sm justify-start items-start w-40">
@@ -196,6 +196,7 @@ const EditPopover = ({ thread }: { thread: IThread }) => {
 						content === "Delete" && "text-red-600"
 					}`}
 					onClick={() => handleClick(content)}
+					key={indx}
 				>
 					{content}
 				</button>
@@ -205,20 +206,28 @@ const EditPopover = ({ thread }: { thread: IThread }) => {
 				isOpen={isOpen}
 				setIsOpen={setIsOpen}
 				dialogTitle={activeType === "Edit" ? "Edit Thread" : "Delete Thread"}
-				children={
-					activeType === "Edit" ? (
-						<EditThread thread={thread} setIsOpen={setIsOpen} />
-					) : (
-						<div className="flex flex-col gap-5">
-							<h1>Do you want to delete this thread?</h1>
-							<div className="flex justify-between">
-								<ButtonField text="Cancel" className="bg-dark-2 hover:bg-dark-2" handleFunction={() => setIsOpen(false)}/>
-								<ButtonField text="Delete" handleFunction={handleDeleteThread} loading={isDeleting} spinnerColor="black"/>
-							</div>
+			>
+				{activeType === "Edit" ? (
+					<EditThread thread={thread} setIsOpen={setIsOpen} />
+				) : (
+					<div className="flex flex-col gap-5">
+						<h1>Do you want to delete this thread?</h1>
+						<div className="flex justify-between">
+							<ButtonField
+								text="Cancel"
+								className="bg-dark-2 hover:bg-dark-2"
+								handleFunction={() => setIsOpen(false)}
+							/>
+							<ButtonField
+								text="Delete"
+								handleFunction={handleDeleteThread}
+								loading={isDeleting}
+								spinnerColor="black"
+							/>
 						</div>
-					)
-				}
-			/>
+					</div>
+				)}
+			</DialogBox>
 		</div>
 	);
 };
