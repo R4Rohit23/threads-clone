@@ -37,6 +37,7 @@ export function UserProfilePopover({ children, userData }: IProps) {
 		userData?.id as string
 	);
 
+
 	const handleFollowUnfollow = async () => {
 		setIsLoading(true);
 		if (followStatus === "Follow") {
@@ -91,12 +92,11 @@ export function UserProfilePopover({ children, userData }: IProps) {
 								? (myProfile?.totalFollowers as number)
 								: (userData?.totalFollowers as number)
 						)}{" "}
-						followers{" "}
 					</p>
 					{!IS_MINE && (
 						<ButtonField
 							text={followStatus}
-							className="bg-white text-black hover:bg-white hover:text-black font-semibold text-base"
+							className="bg-white text-black hover:bg-white hover:text-black font-semibold text-sm"
 							disabled={followStatus === "Requested"}
 							loading={isLoading}
 							handleFunction={handleFollowUnfollow}

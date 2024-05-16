@@ -37,10 +37,16 @@ const CreateThread = () => {
 				onSubmit={async (values: any, { setSubmitting }) => {
 					try {
 						setSubmitting(true);
-						const { data } = await APIHandler("POST", ROUTES.THREAD, {
-							title: values.title,
-							thumbnails: uploadedAsset,
+						const formData = new FormData();
+
+						formData.append("title", values.title);
+						
+						uploadedAsset && uploadedAsset?.forEach(element => {
+							formData.append("thumbnails", element)
 						});
+
+						const { data } = await APIHandler("POST", ROUTES.THREAD, formData);
+
 						if (!data.success) {
 							toast.error(data.message ?? "Internal Server Error");
 							setSubmitting(false);
@@ -126,6 +132,7 @@ const CreateThread = () => {
 								disabled={isSubmitting}
 								loading={isSubmitting}
 								type="submit"
+								spinnerColor="black"
 							/>
 						</div>
 					</div>

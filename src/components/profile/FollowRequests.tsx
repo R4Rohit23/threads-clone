@@ -38,7 +38,7 @@ const FollowRequests = ({ followRequests }: IProps) => {
 	return (
 		<div className="flex flex-col divide-y-2 mt-5">
 			{followRequests &&
-				followRequests.length > 0 &&
+				followRequests.length > 0 ?
 				followRequests.map((request) => (
 					<div key={request.id} className="flex justify-between">
 						<div className="flex items-center gap-3">
@@ -62,7 +62,7 @@ const FollowRequests = ({ followRequests }: IProps) => {
 						<div className="flex gap-2">
 							<ButtonField
 								text="Accept"
-								className="bg-white text-black hover:bg-white hover:text-black font-semibold text-base"
+								className="bg-white text-black hover:bg-white hover:text-black font-semibold text-xs"
 								handleFunction={() =>
 									handleAccept(request.senderId, session?.user.id as string, "ACCEPTED")
 								}
@@ -70,12 +70,18 @@ const FollowRequests = ({ followRequests }: IProps) => {
 							/>
 							<ButtonField
 								text="Reject"
-								className="bg-dark text-white hover:bg-dark hover:text-white font-semibold text-base border"
+								className="bg-dark text-white hover:bg-dark hover:text-white font-semibold text-xs border"
+								handleFunction={() =>
+									handleAccept(request.senderId, session?.user.id as string, "REJECTED")
+								}
 								loading={isRejectLoading}
+								spinnerColor="white"
 							/>
 						</div>
 					</div>
-				))}
+				)) : (
+					<p className="mx-auto text-main-grey">No Requests so far</p>
+				)}
 		</div>
 	);
 };

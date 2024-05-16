@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prismaClient";
 import { APIHandler } from "@/server/ApiHandler";
 
+// Api to create follow request
 export async function POST(req: NextRequest) {
 	try {
 		const { id: senderId } = await verifyToken(req);
@@ -99,11 +100,9 @@ export async function PUT(req: NextRequest) {
 				},
 			});
 
-			const updateFollowRequest = await prisma.followRequest.update({
+			// Delete the follow request if the request is already accepted or rejected
+			const updateFollowRequest = await prisma.followRequest.delete({
 				where: { id: followRequest?.id },
-				data: {
-					status: "ACCEPTED",
-				},
 			});
 
 			// Call the external api to follow the user
@@ -135,11 +134,8 @@ export async function PUT(req: NextRequest) {
 				},
 			});
 
-			const updateFollowRequest = await prisma.followRequest.update({
+			const updateFollowRequest = await prisma.followRequest.delete({
 				where: { id: followRequest?.id },
-				data: {
-					status: "REJECTED",
-				},
 			});
 
 			return NextResponse.json({

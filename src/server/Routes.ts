@@ -8,7 +8,8 @@ const ROUTES = {
 	COMMENT: "/api/comment",
 	PROFILE: {
 		USER_PROFILE: "/api/profile",
-		SEARCH_USER: "/api/profile/search"
+		SEARCH_USER: "/api/profile/search",
+		MY_CONNECTIONS: "/api/profile/connections"
 	},
 	FOLLOW: {
 		FOLLOW: "/api/follow",

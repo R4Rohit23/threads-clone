@@ -33,7 +33,7 @@ const LoginPage = () => {
 	const imageRef = useRef<any>();
 
 	return (
-		<div className="absolute center-horizontal top-5 flex-col text-white gap-5">
+		<div className="absolute center-horizontal top-5 flex-col text-white gap-5 pb-5">
 			<h1 className="heading-1 backdrop-blur-md">Register</h1>
 
 			<Formik

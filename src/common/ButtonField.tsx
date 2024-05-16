@@ -13,6 +13,7 @@ interface PropButton extends HTMLButtonElement {
 	Icon?: React.ElementType;
 	loading?: boolean;
 	type: "button" | "submit" | "reset";
+	spinnerColor?: string;
 }
 
 const ButtonField: React.FC<Partial<PropButton>> = (props) => {
@@ -27,16 +28,14 @@ const ButtonField: React.FC<Partial<PropButton>> = (props) => {
 		padding,
 		loading,
 		type,
-		disabled
+		disabled,
+		spinnerColor
 	} = props;
 	return (
 		<div>
 			<Button
 				type={type}
-				// className={`${className ? className : "gradient-btn"} flex items-center gap-4 justify-center  sm:p-3 text-xs sm:text-sm  ${
-				// 	width ? width : "w-full"
-				// } ${padding ? padding : "px-2 py-1 sm:px-3.5 sm:py-1"}`}
-				className={cn(className, "flex items-center gap-4 justify-center  w-full px-2")}
+				className={`${className ? className : "flex items-center gap-4 justify-center  w-full px-2 bg-white text-black hover:bg-white hover:text-black font-semibold"}`}
 				onClick={handleFunction}
 				disabled={loading || disabled}
 			>
@@ -47,7 +46,7 @@ const ButtonField: React.FC<Partial<PropButton>> = (props) => {
 						} `}
 					/>
 				)}
-				{loading && <Spinner />}
+				{loading && <Spinner color={spinnerColor as string}/>}
 				{text}
 			</Button>
 		</div>

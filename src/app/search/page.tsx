@@ -40,7 +40,6 @@ const SearchPage = () => {
 		}, 1000);
 	}, [query]);
 
-
 	return (
 		<div className="mx-auto">
 			<div className="flex gap-2 items-center">
@@ -77,7 +76,7 @@ const SearchPage = () => {
 };
 
 const UserProfile = ({ userData }: { userData: IAuthor }) => {
-  const router = useRouter();
+	const router = useRouter();
 	return (
 		<div className="py-5 flex justify-between">
 			<div className="flex gap-2 items-center">
@@ -93,9 +92,11 @@ const UserProfile = ({ userData }: { userData: IAuthor }) => {
 					<p className="text-sm text-main-grey">{userData.name}</p>
 				</div>
 			</div>
-      <Link href={`/${userData.username}`}>
-        <p className="bg-white text-black hover:bg-white hover:text-black rounded-lg text-xs p-2">View Profile</p>
-      </Link>
+			<Link href={`/${userData.username}`}>
+				<p className="bg-white text-black hover:bg-white hover:text-black rounded-lg text-xs p-2 font-semibold">
+					View Profile
+				</p>
+			</Link>
 		</div>
 	);
 };

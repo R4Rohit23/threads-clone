@@ -43,21 +43,24 @@ export default function Navbar() {
 	const fullName = session?.user && session?.user.name?.split("").join(" ");
 
 	return (
-		<Disclosure as="nav" className="bg-dark-1 backdrop-blur-md shadow">
+		<Disclosure as="nav" className="backdrop-blur-lg shadow-lg sticky top-0 z-10">
 			{({ open }) => (
 				<>
-					<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 lg:py-2">
+					<div className="mx-auto max-w-7xl lg:py-2">
 						<div className="flex h-16 justify-between">
 							<div className="flex">
-								<div className="flex flex-shrink-0 items-center">
+								<Link className="flex flex-shrink-0 items-center" href="/">
 									<img
 										className="h-8 w-auto"
-										src="/assets/ThreadsLogo.png"
+										src="/assets/pin.png"
 										alt="Logo"
 									/>
-								</div>
+									<p className="hidden italic sm:block text-2xl font-bold text-white pl-2">
+                                        Spool
+                                    </p>
+								</Link>
 							</div>
-							<div className="hidden sm:ml-28 sm:flex sm:space-x-20 items-center">
+							<div className="hidden sm:flex sm:space-x-20 items-center">
 								{navLinks.map((item, indx) => (
 									<Link
 										key={indx}
@@ -77,7 +80,7 @@ export default function Navbar() {
 									</Link>
 								))}
 							</div>
-							<div className="hidden sm:ml-6 sm:flex sm:items-center">
+							<div className="hidden  sm:flex sm:items-center">
 								<button
 									type="button"
 									className="relative rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
@@ -159,7 +162,7 @@ export default function Navbar() {
 									</Transition>
 								</Menu>
 							</div>
-							<div className="-mr-2 flex items-center sm:hidden">
+							<div className="flex items-center sm:hidden">
 								{/* Mobile menu button */}
 								<Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
 									<span className="absolute -inset-0.5" />

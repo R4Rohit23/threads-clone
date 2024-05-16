@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import { useGetThreadById } from "@/hooks/getThreadById";
 import Loader from "@/common/Loader";
 import toast from "react-hot-toast";
-import { checkIsImage, formatDate } from "@/utils/reusableFunctions";
+import { checkIsImage, formatDate, formatTitle } from "@/utils/reusableFunctions";
 import { FaArrowLeft, FaArrowRight, FaHeart } from "react-icons/fa";
 import { useUpdateThread } from "@/hooks/updateThread";
 import Discussion from "@/components/Home/Discussion";
@@ -62,9 +62,10 @@ const ThreadById = () => {
 										{formatDate(data?.createdAt as string)}
 									</p>
 								</div>
-								<div>
-									<p className="text-white text-base">{data?.title}</p>
-								</div>
+								<div
+									className="text-white text-base"
+									dangerouslySetInnerHTML={{ __html: formatTitle(data?.title as string) }}
+								/>
 								<div className="flex items-center justify-center mt-2">
 									{data?.thumbnails && data.thumbnails?.length > 1 && (
 										<button
@@ -128,7 +129,10 @@ const ThreadById = () => {
 											})
 										}
 									/>
-									<Comment readonly totalComments={data?.totalComments as number}/>
+									<Comment
+										readonly
+										totalComments={data?.totalComments as number}
+									/>
 								</div>
 							</div>
 						</div>

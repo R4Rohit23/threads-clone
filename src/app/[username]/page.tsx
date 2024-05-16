@@ -3,13 +3,12 @@
 import ButtonField from "@/common/ButtonField";
 import { DialogBox } from "@/common/Dialog";
 import Loader from "@/common/Loader";
-import EditProfile from "@/components/profile/EditProfile";
+import FollowersModal from "@/components/profile/FollowersModal";
 import UserComments from "@/components/profile/UserComments";
 import UserThreads from "@/components/profile/UserThreads";
 import { useUpdateFollowRequest } from "@/hooks/followRequest";
 import { useGetUserProfile } from "@/hooks/getUserProfile";
 import {
-	IAuthor,
 	IComments,
 	IFollowRequest,
 	IThread,
@@ -26,6 +25,7 @@ const ProfilePage = () => {
 	const { data: session } = useSession();
 	const [activeNav, setActiveNav] = useState<string>("Threads");
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [isMyFollowersOpen, setIsMyFollowersOpen] = useState<boolean>(false);
 
 	const { sendFollowRequest, unFollowUser } = useUpdateFollowRequest({
 		username: session?.user.username as string,
@@ -75,11 +75,11 @@ const ProfilePage = () => {
 					receiverId: userData?.id,
 				});
 			}
-            setIsLoading(false);
+			setIsLoading(false);
 		} catch (error) {
-            console.log(error);
-            setIsLoading(false);
-        }
+			console.log(error);
+			setIsLoading(false);
+		}
 	};
 
 	return (
@@ -105,11 +105,11 @@ const ProfilePage = () => {
 					</div>
 					<div className="space-y-4">
 						<p>{userData?.bio} </p>
-						<p className="text-main-grey">
-							{" "}
-							{formatFollowCount(
-								userData?.totalFollowers as number
-							)}
+						<p
+							className="text-main-grey hover:underline cursor-pointer"
+							onClick={() => setIsMyFollowersOpen(true)}
+						>
+							{formatFollowCount(userData?.totalFollowers as number)}
 						</p>
 						<div>
 							<ButtonField
@@ -137,12 +137,16 @@ const ProfilePage = () => {
 					</nav>
 
 					{activeNav === "Threads" ? (
-						<UserThreads data={userData?.threads as IThread[]}/>
+						<UserThreads data={userData?.threads as IThread[]} />
 					) : (
 						<UserComments comments={userData?.comments as IComments[]} />
 					)}
 				</div>
 			)}
+
+			<DialogBox isOpen={isMyFollowersOpen} setIsOpen={setIsMyFollowersOpen}>
+				<FollowersModal username={userData?.username as string} />
+			</DialogBox>
 		</div>
 	);
 };

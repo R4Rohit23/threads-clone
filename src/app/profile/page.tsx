@@ -4,6 +4,7 @@ import ButtonField from "@/common/ButtonField";
 import { DialogBox } from "@/common/Dialog";
 import Loader from "@/common/Loader";
 import EditProfile from "@/components/profile/EditProfile";
+import FollowersModal from "@/components/profile/FollowersModal";
 import UserComments from "@/components/profile/UserComments";
 import UserThreads from "@/components/profile/UserThreads";
 import { useGetUserProfile } from "@/hooks/getUserProfile";
@@ -17,6 +18,7 @@ import toast from "react-hot-toast";
 const ProfilePage = () => {
 	const { data: session } = useSession();
 	const [isProfileEditOpen, setIsProfileEditOpen] = useState<boolean>(false);
+	const [isMyFollowersOpen, setIsMyFollowersOpen] = useState<boolean>(false);
 	const [activeNav, setActiveNav] = useState<string>("Threads");
 
 	const {
@@ -30,8 +32,6 @@ const ProfilePage = () => {
 		console.log(error);
 		return toast.error("Error While Fetching Profile");
 	}
-
-	console.log(userData);
 
 	return (
 		<div>
@@ -56,17 +56,18 @@ const ProfilePage = () => {
 					</div>
 					<div className="space-y-4">
 						<p>{userData?.bio} </p>
-						<p className="text-main-grey">
+						<p
+							className="text-main-grey hover:underline cursor-pointer"
+							onClick={() => setIsMyFollowersOpen(true)}
+						>
 							{" "}
-							{formatFollowCount(
-								userData?.totalFollowers as number
-							)}
+							{formatFollowCount(userData?.totalFollowers as number)}
 						</p>
 						<div>
 							{session?.user.id === userData?.id ? (
 								<ButtonField
 									text="Edit Profile"
-									className="border border-main-grey bg-dark-1 hover:bg-dark-2"
+									className="border border-main-grey bg-dark-1 hover:bg-dark-2 w-full"
 									handleFunction={() => setIsProfileEditOpen(true)}
 								/>
 							) : (
@@ -110,6 +111,10 @@ const ProfilePage = () => {
 					profileData={userData as IAuthor}
 					close={setIsProfileEditOpen}
 				/>
+			</DialogBox>
+
+			<DialogBox isOpen={isMyFollowersOpen} setIsOpen={setIsMyFollowersOpen}>
+				<FollowersModal username={session?.user.username as string} />
 			</DialogBox>
 		</div>
 	);

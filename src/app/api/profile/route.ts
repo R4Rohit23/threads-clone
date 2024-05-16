@@ -59,6 +59,7 @@ export async function GET(req: NextRequest) {
 							createdAt: true,
 						},
 					},
+					followingIDs: true,
 					totalFollowers: true,
 					totalFollowing: true,
 				},

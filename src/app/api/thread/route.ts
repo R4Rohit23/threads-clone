@@ -4,7 +4,7 @@ import { verifyToken } from "@/validation/verifyToken";
 import { User } from "@prisma/client";
 import { SENDER_SELECT } from "../config";
 
-const updateType = ["threadLike"];
+const updateType = ["threadLike", "threadUpdate"];
 
 // Route for Get all threads
 export async function GET() {
@@ -52,7 +52,11 @@ export async function POST(req: NextRequest) {
 	try {
 		const user = await verifyToken(req);
 
-		const { title, thumbnails } = await req.json();
+		const formData = await req.formData();
+
+		const title = formData.get("title")?.toString() ?? undefined;
+		const thumbnailsFromFormData = formData.getAll("thumbnails");
+		const thumbnails = thumbnailsFromFormData.map((value) => value.toString());
 
 		if (!title) {
 			return NextResponse.json({
@@ -63,7 +67,7 @@ export async function POST(req: NextRequest) {
 
 		const thread = await prisma.thread.create({
 			data: {
-				title,
+				title: title,
 				authorId: user.id,
 				thumbnails: thumbnails,
 			},
@@ -105,13 +109,56 @@ export async function PUT(req: NextRequest) {
 
 		if (type == "threadLike") {
 			return handleThreadLike(user, threadId);
-		}
+		} 
 	} catch (error: any) {
 		console.error(error);
 		return NextResponse.json({ success: false, message: error.message });
 	}
 }
 
+// Route for deleting thread
+export async function DELETE(req: NextRequest) {
+	try {
+		const { threadId } = await req.json();
+		const user = await verifyToken(req);
+
+		if (!threadId) {
+			return NextResponse.json({
+                success: false,
+                message: "Please Provide Thread ID",
+            });
+		}
+
+		const thread = await prisma.thread.findFirst({ where: { id: threadId } });
+
+		if (!thread) {
+			return NextResponse.json({
+                success: false,
+                message: "Thread Not Found",
+            });
+		}
+
+		if (thread.authorId !== user.id) {
+            return NextResponse.json({
+                success: false,
+                message: "You are not authorized to delete this thread",
+            });
+        }
+
+		await prisma.thread.delete({ where: { id: threadId } });
+		
+		return NextResponse.json({
+            success: true,
+            message: "Thread Deleted Successfully",
+        });
+	} catch (error: any) {
+		console.log(error.message);
+		return NextResponse.json({
+			success: false,
+            message: error.message,
+		})
+	}
+}
 const handleThreadLike = async (user: User, threadId: string) => {
 	try {
 		const thread = await prisma.thread.findFirst({ where: { id: threadId } });

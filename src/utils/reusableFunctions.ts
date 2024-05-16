@@ -18,10 +18,20 @@ export function formatDate(dateString: string): string {
 	} else if (diffDays >= 1) {
 		return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
 	} else if (diffHours >= 1)
-		return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
+		return `${diffHours} hr${diffHours > 1 ? "s" : ""} ago`;
 	else if (diffMinutes >= 1)
-		return `${diffMinutes} minute${diffMinutes > 1 ? "s" : ""} ago`;
+		return `${diffMinutes} min${diffMinutes > 1 ? "s" : ""} ago`;
 	else return "just now";
+}
+
+export const formatTitle = (title: string) => {
+	// Replace newline characters with <br /> tags
+	const formattedTitle = title.replace(/\r\n/g, '<br />');
+
+	// Escape double quotes
+	const escapedTitle = formattedTitle.replace(/"/g, '&quot;');
+
+	return escapedTitle;
 }
 
 export const getFullName = (name: string) => {

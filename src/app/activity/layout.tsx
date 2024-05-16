@@ -19,7 +19,7 @@ export default function ThreadLayout({
 		<html lang="en">
 			<body className={`${inter.className} bg-dark-1`}>
 				<Navbar />
-				<div className="text-white mx-auto max-w-3xl mt-5 flex flex-col">
+				<div className="text-white mx-auto max-w-xl mt-10 flex flex-col">
 					{children}
 				</div>
 			</body>

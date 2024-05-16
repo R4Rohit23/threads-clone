@@ -37,8 +37,6 @@ const LoginPage = () => {
 						const result = await signIn("credentials", {
 							email: values.email,
 							password: values.password,
-							callbackUrl: "/",
-							redirect: false
 						});
 						
 						if (!result?.ok) {
@@ -49,7 +47,6 @@ const LoginPage = () => {
 							toast.success("Successfully Logged In");
 							router.push("/");
 						}
-
 					} catch (error) {
 						console.log(error);
 						setSubmitting(false);
@@ -89,6 +86,8 @@ const LoginPage = () => {
 							text="Submit"
 							disabled={isSubmitting}
 							loading={isSubmitting}
+							className="gradient-btn"
+							spinnerColor="white"
 						/>
 
 						<div className="flex items-center">
@@ -110,6 +109,8 @@ const LoginPage = () => {
                                 });
 								setIsLoading(false);
 							}}
+							className="gradient-btn"
+							spinnerColor="white"
 						/>
 
 						<div className="capitalize text-sm text-gray-400 text-center">
