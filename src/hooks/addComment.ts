@@ -2,6 +2,7 @@ import { APIHandler } from "@/server/ApiHandler";
 import ROUTES from "@/server/Routes";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 
 interface IAddComment {
@@ -9,9 +10,12 @@ interface IAddComment {
 	threadId?: string;
 	text?: string;
 	commentId?: string;
+	queryToInvalidate?: any;
 }
 
 export const useComment = (props: IAddComment) => {
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+
 	const queryClient = useQueryClient();
 	const { data: session } = useSession();
 
@@ -40,8 +44,7 @@ export const useComment = (props: IAddComment) => {
 	const commentLike = useMutation({
 		mutationFn: likeCommentFunction,
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["commentById", props.commentId as string] });
-			queryClient.invalidateQueries({ queryKey: ["userProfile", session?.user.email]});
+			queryClient.invalidateQueries({ queryKey: props.queryToInvalidate });
 		},
 		onError: (error) => {
 			toast.error(error.message ?? "Error While Liking Comment");
@@ -63,10 +66,12 @@ export const useComment = (props: IAddComment) => {
 	};
 
 	const likeComment = async ({ commentId }: IAddComment) => {
+		setIsLoading(true);
 		await commentLike.mutateAsync({ commentId });
+		setIsLoading(false);
 	};
 
-	return { addComment, likeComment };
+	return { addComment, likeComment, isLoading};
 };
 
 const addParentComment = async ({ type, text, threadId }: IAddComment) => {

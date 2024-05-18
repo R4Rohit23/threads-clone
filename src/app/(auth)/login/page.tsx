@@ -37,10 +37,12 @@ const LoginPage = () => {
 						const result = await signIn("credentials", {
 							email: values.email,
 							password: values.password,
+							redirect: false,
+							callbackUrl: "/"
 						});
-						
+
 						if (!result?.ok) {
-							toast.error(result?.error ?? "Internal Server Error")
+							toast.error(result?.error ?? "Error Occurred While Logging In")
 							setSubmitting(false);
 						} else {
 							setSubmitting(false);

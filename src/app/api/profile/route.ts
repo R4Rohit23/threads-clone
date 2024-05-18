@@ -26,7 +26,11 @@ export async function GET(req: NextRequest) {
 					email: true,
 					bio: true,
 					profileImage: true,
-					comments: true,
+					comments: {
+						include: {
+							sender: SENDER_SELECT
+						}
+					},
 					threads: {
 						select: {
 							id: true,

@@ -85,6 +85,7 @@ const Discussion = ({ comments, thread, type, commentId, threadId }: IProps) => 
 						type="submit"
 						text="Post Comment"
 						loading={isLoading}
+						spinnerColor="black"
 					/>
 				</form>
 				<div className="flex flex-col ">
@@ -109,7 +110,6 @@ export const CommentComponent = ({
 	comment,
 	thread,
 	threadId,
-	commentId
 }: {
 	isReply: boolean;
 	comment: IComments;
@@ -117,9 +117,8 @@ export const CommentComponent = ({
 	threadId?: string;
 	commentId?: string;
 }) => {
-	const { likeComment } = useComment({
-		threadId: thread?.id,
-		commentId: commentId,
+	const { likeComment, isLoading } = useComment({
+		queryToInvalidate: ["threadById", thread?.id]
 	});
 
 	return (
@@ -149,6 +148,7 @@ export const CommentComponent = ({
 					<Like
 						data={comment}
 						handleFunction={() => likeComment({ commentId: comment.id })}
+						isLoading={isLoading}
 					/>
 					<Comment
 						href={"/thread/" + threadId + "/comment/" + comment.id}

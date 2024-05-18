@@ -29,13 +29,17 @@ const ButtonField: React.FC<Partial<PropButton>> = (props) => {
 		loading,
 		type,
 		disabled,
-		spinnerColor
+		spinnerColor,
 	} = props;
 	return (
 		<div>
 			<Button
 				type={type}
-				className={`${className ? className : "flex items-center gap-4 justify-center  w-full px-2 bg-white text-black hover:bg-white hover:text-black font-semibold"}`}
+				className={`${
+					className
+						? className
+						: "bg-white text-black hover:bg-white hover:text-black font-semibold"
+				} flex items-center gap-4 justify-center  w-full px-2`}
 				onClick={handleFunction}
 				disabled={loading || disabled}
 			>
@@ -46,7 +50,7 @@ const ButtonField: React.FC<Partial<PropButton>> = (props) => {
 						} `}
 					/>
 				)}
-				{loading && <Spinner color={spinnerColor as string}/>}
+				{loading && <Spinner color={spinnerColor as string} />}
 				{text}
 			</Button>
 		</div>
