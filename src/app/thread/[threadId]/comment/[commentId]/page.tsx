@@ -16,10 +16,10 @@ import Comment from "@/common/Comment";
 
 const CommentById = () => {
 	const { commentId, threadId } = useParams();
-	const { likeComment } = useComment({ commentId: commentId as string });
+	const { likeComment, isLoading } = useComment({ commentId: commentId as string });
 	const [currentIndex, setCurrentIndex] = useState<number>(0);
 
-	const { data, isLoading, isError, error } = useGetCommentById({
+	const { data, isLoading: commentLoading, isError, error } = useGetCommentById({
 		commentId: commentId as string,
 	});
 
@@ -41,7 +41,7 @@ const CommentById = () => {
 
 	return (
 		<>
-			{isLoading ? (
+			{commentLoading ? (
 				<Loader />
 			) : (
 				<div>
@@ -126,6 +126,7 @@ const CommentById = () => {
 												commentId: commentId as string,
 											})
 										}
+										isLoading={isLoading}
 									/>
 									<Comment
 										readonly

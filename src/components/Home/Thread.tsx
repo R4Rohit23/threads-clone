@@ -25,7 +25,7 @@ interface IProps {
 
 const Thread = ({ data }: IProps) => {
 	const { data: session } = useSession();
-	const { updateThread } = useUpdateThread();
+	const { updateThread, isLoading } = useUpdateThread({ queryToInvalidate: ["threads"]});
 
 	const [currentIndex, setCurrentIndex] = useState<number>(0);
 	const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -130,6 +130,7 @@ const Thread = ({ data }: IProps) => {
 								updateThread({ type: "threadLike", threadId: data.id })
 							}
 							data={data}
+							isLoading={isLoading}
 						/>
 						<div className="space-y-2">
 							<div>
@@ -169,7 +170,7 @@ const EditPopover = ({ thread }: { thread: IThread }) => {
 	const [activeType, setActiveType] = useState<string>();
 	const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
-	const { updateThread } = useUpdateThread();
+	const { updateThread } = useUpdateThread({ queryToInvalidate: ["threads"]});
 
 	const handleClick = (type: string) => {
 		if (type === "Edit" || type === "Delete") {

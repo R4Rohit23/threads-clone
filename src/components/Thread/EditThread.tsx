@@ -20,7 +20,7 @@ const EditThread = ({
 	const [title, setTitle] = useState<string>(thread.title ?? "");
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
-	const { updateThread } = useUpdateThread();
+	const { updateThread } = useUpdateThread({});
 
 	const handleDelete = async (file: string) => {
 		const updatedImages = uploadedAsset.filter((item) => item !== file);

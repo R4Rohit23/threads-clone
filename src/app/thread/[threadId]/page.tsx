@@ -16,10 +16,10 @@ import Comment from "@/common/Comment";
 
 const ThreadById = () => {
 	const { threadId } = useParams();
-	const { updateThread } = useUpdateThread();
+	const { updateThread, isLoading } = useUpdateThread({ queryToInvalidate: ["threadById", threadId]});
 	const [currentIndex, setCurrentIndex] = useState<number>(0);
 
-	const { data, isLoading, isError, error } = useGetThreadById({
+	const { data, isLoading: isThreadLoading, isError, error } = useGetThreadById({
 		threadId: threadId as string,
 	});
 
@@ -41,7 +41,7 @@ const ThreadById = () => {
 
 	return (
 		<>
-			{isLoading ? (
+			{isThreadLoading ? (
 				<Loader />
 			) : (
 				<div>
@@ -128,6 +128,7 @@ const ThreadById = () => {
 												threadId: data?.id as string,
 											})
 										}
+										isLoading={isLoading}
 									/>
 									<Comment
 										readonly

@@ -43,6 +43,8 @@ model User {
   comments               Comment[]
   sentFollowRequests     FollowRequest[] @relation("SentRequests")
   receivedFollowRequests FollowRequest[] @relation("ReceivedRequests")
+  sentNotifications      Notification[]  @relation("SentNotifications")
+  receivedNotifications  Notification[]  @relation("ReceivedNotifications")
 
   @@map("users")
 }
@@ -79,6 +81,14 @@ model FollowRequest {
 
   @@index([senderId, receiverId])
   @@map("followRequests")
+}
+
+model Notification {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  sender     User   @relation("SentNotifications", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver   User   @relation("ReceivedNotifications", fields: [receiverId], references: [id], onDelete: Cascade)
+  senderId   String @db.ObjectId
+  receiverId String @db.ObjectId
 }
 
 enum Status {

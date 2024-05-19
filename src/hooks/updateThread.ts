@@ -2,26 +2,26 @@ import { APIHandler } from "@/server/ApiHandler";
 import ROUTES from "@/server/Routes";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 
 interface IUpdateThread {
-	type: "threadLike" | "threadUpdate" | "threadDelete";
-	threadId: string;
+	type?: "threadLike" | "threadUpdate" | "threadDelete";
+	threadId?: string;
 	title?: string;
 	thumbnails?: string[];
+	queryToInvalidate?: any;
 }
 
-export const useUpdateThread = () => {
+export const useUpdateThread = ({ queryToInvalidate }: IUpdateThread) => {
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const queryClient = useQueryClient();
 	const { data: session } = useSession();
 
 	const threadLike = useMutation({
 		mutationFn: likeThread,
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["threads"] });
-			queryClient.invalidateQueries({
-				queryKey: ["userProfile", session?.user.username],
-			});
+			queryClient.invalidateQueries({ queryKey: queryToInvalidate });
 		},
 		onError: (error) => {
 			toast.error(error.message ?? "Error While Liking Thread");
@@ -51,18 +51,24 @@ export const useUpdateThread = () => {
 	}: IUpdateThread) => {
 		switch (type) {
 			case "threadLike":
+				setIsLoading(true);
 				await threadLike.mutateAsync({ type, threadId });
+				setIsLoading(false);
 				break;
 			case "threadUpdate":
+				setIsLoading(true);
 				await threadUpdate.mutateAsync({ type, threadId, title, thumbnails });
+				setIsLoading(false);
 				break;
 			case "threadDelete":
+				setIsLoading(true);
 				await threadUpdate.mutateAsync({ type, threadId, title, thumbnails });
+				setIsLoading(false);
 				break;
 		}
 	};
 
-	return { updateThread };
+	return { updateThread, isLoading };
 };
 
 const likeThread = async ({ type, threadId }: IUpdateThread) => {
@@ -88,7 +94,7 @@ const updateThreadFunction = async ({
 }: IUpdateThread) => {
 	if (type === "threadUpdate") {
 		const formData = new FormData();
-		formData.append("threadId", threadId);
+		formData.append("threadId", threadId as string);
 		formData.append("title", title as string);
 		thumbnails &&
 			thumbnails.forEach((element) => {
