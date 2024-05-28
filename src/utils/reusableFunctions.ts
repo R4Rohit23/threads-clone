@@ -46,7 +46,7 @@ export const getImageFromUsername = (username: string) => {
 
 export const checkIsImage = (src: string) => {
 	const fileExtension = src.split(".").pop();
-	const fileTypes = ["jpg", "jpeg", "png", "webp"];
+	const fileTypes = ["jpg", "jpeg", "png", "webp", "JPG", "PNG" , "JPEG"];
 
 	if (fileTypes.includes(fileExtension as string)) {
 		return true;

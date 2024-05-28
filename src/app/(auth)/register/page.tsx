@@ -20,6 +20,7 @@ import { UploadButton } from "@/utils/uploadthing";
 const LoginPage = () => {
 	const inputFields = [Name, Username, Email, Password];
 	const [uploadedImage, setUploadedImage] = useState<string>();
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	const router = useRouter();
 
@@ -138,9 +139,18 @@ const LoginPage = () => {
 
 						<ButtonField
 							text="Continue With Google"
+							type="button"
 							className="gradient-btn w-full hover:scale-110 transition-transform duration-300"
 							Icon={FaGoogle}
-							loading={isSubmitting}
+							loading={isLoading}
+							handleFunction={async () => {
+								setIsLoading(true);
+								await signIn("google", {
+                                    callbackUrl: "/",
+                                    redirect: false
+                                });
+								setIsLoading(false);
+							}}
 						/>
 
 						<div className="capitalize text-sm text-gray-400 text-center">

@@ -5,7 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 export const useGetAllThreads = () => {
 	const fetchAllThreads = async () => {
 		const { data } = await APIHandler("GET", ROUTES.THREAD);
-		console.log(data);
 		return data.data;
 	};
 

@@ -1,5 +1,6 @@
 "use client";
 import Loader from "@/common/Loader";
+import Activities from "@/components/profile/Activities";
 import FollowRequests from "@/components/profile/FollowRequests";
 import { useGetUserProfile } from "@/hooks/getUserProfile";
 import { IFollowRequest } from "@/interface/thread";
@@ -29,8 +30,8 @@ const ActivityPage = () => {
 				<Loader />
 			) : (
 				<div>
-					<nav className="text-white flex items-center text-sm">
-						{["Requests", "Comments"].map((nav, indx) => (
+					<nav className="text-white flex items-center text-sm sticky top-20 backdrop-blur-md">
+						{["Requests", "Activities"].map((nav, indx) => (
 							<button
 								className={`${
 									activeNav === nav ? "border-b-2 border-white" : ""
@@ -50,7 +51,7 @@ const ActivityPage = () => {
 							}
 						/>
 					) : (
-						<h1>Hii</h1>
+						<Activities />
 					)}
 				</div>
 			)}

@@ -84,11 +84,18 @@ model FollowRequest {
 }
 
 model Notification {
-  id         String @id @default(auto()) @map("_id") @db.ObjectId
-  sender     User   @relation("SentNotifications", fields: [senderId], references: [id], onDelete: Cascade)
-  receiver   User   @relation("ReceivedNotifications", fields: [receiverId], references: [id], onDelete: Cascade)
-  senderId   String @db.ObjectId
-  receiverId String @db.ObjectId
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  sender      User     @relation("SentNotifications", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver    User     @relation("ReceivedNotifications", fields: [receiverId], references: [id], onDelete: Cascade)
+  senderId    String   @db.ObjectId
+  receiverId  String   @db.ObjectId
+  content     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  redirectUrl String
+
+  @@index([receiverId])
+  @@map("notifications")
 }
 
 enum Status {

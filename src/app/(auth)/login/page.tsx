@@ -88,8 +88,7 @@ const LoginPage = () => {
 							text="Submit"
 							disabled={isSubmitting}
 							loading={isSubmitting}
-							className="gradient-btn"
-							spinnerColor="white"
+							className="gradient-btn w-full hover:scale-110 transition-transform duration-300"
 						/>
 
 						<div className="flex items-center">
@@ -111,8 +110,7 @@ const LoginPage = () => {
                                 });
 								setIsLoading(false);
 							}}
-							className="gradient-btn"
-							spinnerColor="white"
+							className="gradient-btn w-full hover:scale-110 transition-transform duration-300"
 						/>
 
 						<div className="capitalize text-sm text-gray-400 text-center">

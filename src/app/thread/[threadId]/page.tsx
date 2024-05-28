@@ -76,7 +76,7 @@ const ThreadById = () => {
 										</button>
 									)}
 
-									<div className="w-full overflow-hidden">
+									<div className="max-w-2xl overflow-hidden">
 										<div
 											className="flex transition-transform duration-500"
 											style={{
@@ -89,7 +89,7 @@ const ThreadById = () => {
 														key={indx}
 														src={src}
 														alt="thumbnail"
-														className="max-w-sm max-h-96 object-cover rounded-lg"
+														className=" max-h-96 object-cover rounded-lg"
 														loading="lazy"
 													/>
 												) : (

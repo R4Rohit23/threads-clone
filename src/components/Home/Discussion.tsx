@@ -10,6 +10,7 @@ import Like from "@/common/Like";
 
 import Comment from "@/common/Comment";
 import ButtonField from "@/common/ButtonField";
+import { useCreateNotification } from "@/hooks/notifications/useCreateNotification";
 
 interface IProps {
 	thread?: IThread;
@@ -19,11 +20,22 @@ interface IProps {
 	type: "parentComment" | "subComment";
 }
 
-const Discussion = ({ comments, thread, type, commentId, threadId }: IProps) => {
+const Discussion = ({
+	comments,
+	thread,
+	type,
+	commentId,
+	threadId,
+}: IProps) => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const { data: session } = useSession();
 	const [comment, setComment] = useState("");
-	const { addComment } = useComment({ threadId: thread?.id, commentId: commentId });
+	const { addComment } = useComment({
+		threadId: thread?.id,
+		commentId: commentId,
+	});
+
+	const { createNotificationMutation } = useCreateNotification();
 
 	const handleSubmit = async (e: any) => {
 		e.preventDefault();
@@ -31,19 +43,24 @@ const Discussion = ({ comments, thread, type, commentId, threadId }: IProps) => 
 
 		if (type === "parentComment") {
 			await addComment({
-                type: "parentComment",
-                threadId: thread?.id,
-                text: comment,
-            });
+				type: "parentComment",
+				threadId: thread?.id,
+				text: comment,
+			});
+			await createNotificationMutation.mutateAsync({
+				receiverId: thread?.author.id as string,
+				type: "THREAD_COMMENT",
+				redirectUrl: `/thread/${thread?.id}`
+			})
 		} else {
 			await addComment({
 				type: "subComment",
 				threadId: threadId,
 				text: comment,
-				commentId: commentId
+				commentId: commentId,
 			});
 		}
-		
+
 		setComment("");
 		setIsLoading(false);
 	};
@@ -64,7 +81,10 @@ const Discussion = ({ comments, thread, type, commentId, threadId }: IProps) => 
 						</label>
 						<div className="absolute top-0 -left-14">
 							<Image
-								src={session?.user?.profileImage as string || session?.user.image as string}
+								src={
+									(session?.user?.profileImage as string) ||
+									(session?.user.image as string)
+								}
 								width={300}
 								height={400}
 								alt="Profile Image"
@@ -118,8 +138,10 @@ export const CommentComponent = ({
 	commentId?: string;
 }) => {
 	const { likeComment, isLoading } = useComment({
-		queryToInvalidate: ["threadById", thread?.id]
+		queryToInvalidate: ["threadById", thread?.id],
 	});
+
+	const { createNotificationMutation } = useCreateNotification();
 
 	return (
 		<article
@@ -147,7 +169,14 @@ export const CommentComponent = ({
 				<div className="flex gap-5 items-center">
 					<Like
 						data={comment}
-						handleFunction={() => likeComment({ commentId: comment.id })}
+						handleFunction={async () => {
+							await likeComment({ commentId: comment.id });
+							await createNotificationMutation.mutateAsync({
+								receiverId: comment.sender.id,
+								type: "COMMENT_LIKE",
+								redirectUrl: `/comment/${comment.id}`,
+							});
+						}}
 						isLoading={isLoading}
 					/>
 					<Comment

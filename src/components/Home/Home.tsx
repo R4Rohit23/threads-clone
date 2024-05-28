@@ -1,6 +1,5 @@
 import { useGetAllThreads } from "@/hooks/getAllThreads";
 import React from "react";
-import Discussion from "./Discussion";
 import Thread from "./Thread";
 import { IThread } from "@/interface/thread";
 import toast from "react-hot-toast";

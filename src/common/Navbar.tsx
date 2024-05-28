@@ -1,12 +1,14 @@
 "use client";
 
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { PopoverComponent } from "./Popover";
+import Notifications from "@/components/Home/Notifications";
 
 function classNames(...classes: string[]) {
 	return classes.filter(Boolean).join(" ");
@@ -38,12 +40,16 @@ const navLinks = [
 
 export default function Navbar() {
 	const { data: session } = useSession();
+	const [isNotificationOpen, setIsNotificationOpen] = useState<boolean>(false);
 	const pathname = usePathname();
 
 	const fullName = session?.user && session?.user.name?.split("").join(" ");
 
 	return (
-		<Disclosure as="nav" className="backdrop-blur-lg shadow-lg sticky top-0 z-10">
+		<Disclosure
+			as="nav"
+			className="backdrop-blur-lg shadow-lg sticky top-0 z-10"
+		>
 			{({ open }) => (
 				<>
 					<div className="mx-auto max-w-7xl lg:py-2">
@@ -56,8 +62,8 @@ export default function Navbar() {
 										alt="Logo"
 									/>
 									<p className="hidden italic sm:block text-2xl font-bold text-white pl-2">
-                                        Spool
-                                    </p>
+										Spool
+									</p>
 								</Link>
 							</div>
 							<div className="hidden sm:flex sm:space-x-20 items-center">
@@ -81,14 +87,21 @@ export default function Navbar() {
 								))}
 							</div>
 							<div className="hidden  sm:flex sm:items-center">
-								<button
-									type="button"
-									className="relative rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+								<PopoverComponent
+									isOpen={isNotificationOpen}
+									setIsOpen={setIsNotificationOpen}
+									content={<Notifications />}
 								>
-									<span className="absolute -inset-1.5" />
-									<span className="sr-only">View notifications</span>
-									<BellIcon className="h-6 w-6" aria-hidden="true" />
-								</button>
+									<button
+										type="button"
+										className="relative rounded-full  p-1 text-gray-400 hover:text-gray-500"
+										onClick={() => setIsNotificationOpen(true)}
+									>
+										<span className="absolute -inset-1.5" />
+										<span className="sr-only">View notifications</span>
+										<BellIcon className="h-6 w-6" aria-hidden="true" />
+									</button>
+								</PopoverComponent>
 
 								{/* Profile dropdown */}
 								<Menu as="div" className="relative ml-3">

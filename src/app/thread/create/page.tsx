@@ -14,17 +14,24 @@ import toast from "react-hot-toast";
 import { APIHandler } from "@/server/ApiHandler";
 import ROUTES from "@/server/Routes";
 import { useRouter } from "next/navigation";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 const CreateThread = () => {
 	const { data: session } = useSession();
-	const [uploadedAsset, setUploadedAsset] = useState<string[]>();
+	const [uploadedAsset, setUploadedAsset] = useState<string[]>([]);
 
 	const router = useRouter();
 
 	const Validation = Yup.object().shape({
-		title: Yup.string()
-			.required("Title is required")
+		title: Yup.string().required("Title is required"),
 	});
+
+	console.log(uploadedAsset);
+
+	const handleDelete = async (file: any) => {
+		const updatedImages = uploadedAsset.filter((item) => item !== file);
+		setUploadedAsset(updatedImages);
+	};
 
 	return (
 		<main className="w-full">
@@ -40,10 +47,11 @@ const CreateThread = () => {
 						const formData = new FormData();
 
 						formData.append("title", values.title);
-						
-						uploadedAsset && uploadedAsset?.forEach(element => {
-							formData.append("thumbnails", element)
-						});
+
+						uploadedAsset &&
+							uploadedAsset?.forEach((element) => {
+								formData.append("thumbnails", element);
+							});
 
 						const { data } = await APIHandler("POST", ROUTES.THREAD, formData);
 
@@ -73,8 +81,13 @@ const CreateThread = () => {
 					<div className="flex justify-between items-start w-full gap-2 p-4">
 						<Image
 							src={
-								(session?.user.profileImage as string || session?.user.image as string) ??
-								(session?.user && getImageFromUsername(session?.user?.username as string || session.user.name as string))
+								((session?.user.profileImage as string) ||
+									(session?.user.image as string)) ??
+								(session?.user &&
+									getImageFromUsername(
+										(session?.user?.username as string) ||
+											(session.user.name as string)
+									))
 							}
 							width={500}
 							height={500}
@@ -93,38 +106,53 @@ const CreateThread = () => {
 									<ErrorText text={errors["title"] as string} />
 								)}
 							</div>
-							<div className="flex gap-5 overflow-x-auto">
+							<div className="gap-5 overflow-x-auto">
 								{uploadedAsset?.map((src, indx) =>
 									checkIsImage(src) ? (
-										<Image
-											src={src}
-											width={500}
-											height={500}
-											alt="image"
-											key={indx}
-											className="rounded-lg pb-5 w-full max-h-72 object-fill"
-										/>
+										<div className="relative">
+											<Image
+												src={src}
+												width={500}
+												height={500}
+												alt="image"
+												key={indx}
+												className="rounded-lg pb-5 w-full max-h-72 object-contain"
+											/>
+											<div className="absolute top-3 right-3 z-10">
+												<button
+													className="text-black bg-white rounded-full p-1"
+													onClick={() => handleDelete(src)}
+												>
+													<XMarkIcon className="h-6 w-6" />
+												</button>
+											</div>
+										</div>
 									) : (
-										<video src={src} controls className="max-h-72 w-full" key={indx}/>
+										<video
+											src={src}
+											controls
+											className="max-h-72 w-full"
+											key={indx}
+										/>
 									)
 								)}
 							</div>
 
 							<div>
-								{!uploadedAsset && (
-									<UploadDropzone
-										endpoint="imageUploader"
-										config={{ mode: "auto" }}
-										onClientUploadComplete={(res) => {
-											const urls = res.map((data) => data.url);
-											setUploadedAsset(urls);
-										}}
-										onUploadError={(error: Error) => {
-											toast.error(`ERROR! ${error.message}`);
-										}}
-										className="max-h-72 pb-4"
-									/>
-								)}
+								{/* {!uploadedAsset && ( */}
+								<UploadDropzone
+									endpoint="imageUploader"
+									config={{ mode: "auto" }}
+									onClientUploadComplete={(res) => {
+										const urls = res.map((data) => data.url);
+										setUploadedAsset((prev: any) => [...prev, ...urls]);
+									}}
+									onUploadError={(error: Error) => {
+										toast.error(`ERROR! ${error.message}`);
+									}}
+									className="max-h-72 pb-4"
+								/>
+								{/* )} */}
 							</div>
 							<ButtonField
 								text="Create Thread"

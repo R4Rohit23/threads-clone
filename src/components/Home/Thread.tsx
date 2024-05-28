@@ -9,7 +9,7 @@ import {
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoChatbubbleOutline } from "react-icons/io5";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { UserProfilePopover } from "../profile/UserProfileModal";
@@ -18,6 +18,14 @@ import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import { DialogBox } from "@/common/Dialog";
 import EditThread from "../Thread/EditThread";
 import ButtonField from "@/common/ButtonField";
+import { pusherClient } from "@/lib/pusher";
+import common from "@/common.json";
+import { useCreateNotification } from "@/hooks/notifications/useCreateNotification";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+
+import { Navigation } from "swiper/modules";
 
 interface IProps {
 	data: IThread;
@@ -25,7 +33,10 @@ interface IProps {
 
 const Thread = ({ data }: IProps) => {
 	const { data: session } = useSession();
-	const { updateThread, isLoading } = useUpdateThread({ queryToInvalidate: ["threads"]});
+	const { updateThread, isLoading } = useUpdateThread({
+		queryToInvalidate: ["threads"],
+	});
+	const { createNotificationMutation } = useCreateNotification();
 
 	const [currentIndex, setCurrentIndex] = useState<number>(0);
 	const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -45,90 +56,106 @@ const Thread = ({ data }: IProps) => {
 	};
 
 	return (
-		<div className="border-b py-4 border-gray-700">
+		<div className="border-b px-4 py-4 sm:px-0 border-gray-700">
 			<div className="flex gap-2 items-start relative">
 				<Image
 					src={data?.author?.profileImage}
 					width={400}
 					height={400}
 					alt="Profile Image"
-					className="rounded-full object-cover w-10 h-10"
+					className="rounded-full object-cover w-8 h-8 sm:w-10 sm:h-10"
 				/>
 
 				<div className="flex flex-col gap-2 relative">
-					<div className="flex items-center gap-2">
+					<div className="flex items-center gap-2 text-sm sm:text-base">
 						<Link href={`/${data?.author?.username}`}>
 							<UserProfilePopover userData={data.author}>
 								<p>@{data?.author?.username} </p>
 							</UserProfilePopover>
 						</Link>
 
-						<p className="text-gray-400 text-sm">
+						<p className="text-gray-400 text-xs sm:text-sm">
 							{formatDate(data?.createdAt)}
 						</p>
 					</div>
 					<div
-						className="text-white text-base"
+						className="text-white text-sm sm:text-base"
 						dangerouslySetInnerHTML={{ __html: formatTitle(data.title) }}
 					/>
-					<div className="flex items-center justify-center">
-						{data.thumbnails && data.thumbnails?.length > 1 && (
-							<button
-								className="bg-dark-2 hover:bg-gray-800 text-gray-400 font-bold p-3 rounded-full absolute -left-12"
-								onClick={() => handlePrev(data.thumbnails as string[])}
-							>
-								<FaArrowLeft />
-							</button>
-						)}
-
-						<Link
-							className="w-full overflow-hidden"
-							href={"/thread/" + data.id}
-						>
-							<div
-								className="flex transition-transform duration-500"
-								style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+					{data.thumbnails && data.thumbnails?.length > 1 ? (
+						<Link href={"/thread/" + data.id}>
+							<Swiper
+								navigation={true}
+								modules={[Navigation]}
+								className="max-w-2xl"
 							>
 								{data.thumbnails?.map((src, indx) =>
 									checkIsImage(src) ? (
-										<img
-											key={indx}
-											src={src}
-											alt="thumbnail"
-											className="max-w-sm max-h-96 object-cover rounded-lg"
-										/>
+										<SwiperSlide>
+											<img
+												key={indx}
+												src={src}
+												alt="thumbnail"
+												className="max-h-96 min-h-96 object-cover rounded-lg  w-full"
+											/>
+										</SwiperSlide>
 									) : (
-										<video
-											controls
-											className="w-full max-h-96 object-cover rounded-lg cursor-pointer"
-											key={indx}
-											loop
-											muted
-											onMouseEnter={(e: any) => e.target.play()}
-											onMouseOut={(e: any) => e.target.pause()}
-										>
-											<source src={src} />
-											Your browser does not support the video tag.
-										</video>
+										<SwiperSlide>
+											<video
+												controls
+												className="w-full max-h-96 object-cover rounded-lg cursor-pointer"
+												key={indx}
+												loop
+												muted
+												onMouseEnter={(e: any) => e.target.play()}
+												onMouseOut={(e: any) => e.target.pause()}
+											>
+												<source src={src} />
+												Your browser does not support the video tag.
+											</video>
+										</SwiperSlide>
 									)
 								)}
-							</div>
+							</Swiper>
 						</Link>
+					) : (
+						<Link href={"/thread/" + data.id}>
+							{data.thumbnails?.map((src, indx) =>
+								checkIsImage(src) ? (
+									<img
+										key={indx}
+										src={src}
+										alt="thumbnail"
+										className="max-h-96 object-contain rounded-lg"
+									/>
+								) : (
+									<video
+										controls
+										className="w-full max-h-96 object-cover rounded-lg cursor-pointer"
+										key={indx}
+										loop
+										muted
+										onMouseEnter={(e: any) => e.target.play()}
+										onMouseOut={(e: any) => e.target.pause()}
+									>
+										<source src={src} />
+										Your browser does not support the video tag.
+									</video>
+								)
+							)}
+						</Link>
+					)}
 
-						{data.thumbnails && data.thumbnails.length > 1 && (
-							<button
-								className="bg-dark-2 hover:bg-gray-800 text-gray-400 font-bold p-3 rounded-full absolute -right-12"
-								onClick={() => handleNext(data.thumbnails as string[])}
-							>
-								<FaArrowRight />
-							</button>
-						)}
-					</div>
 					<div className="flex gap-5">
 						<Like
-							handleFunction={() =>
-								updateThread({ type: "threadLike", threadId: data.id })
-							}
+							handleFunction={async () => {
+								await updateThread({ type: "threadLike", threadId: data.id });
+								await createNotificationMutation.mutateAsync({
+									receiverId: data.author.id,
+									type: "THREAD_LIKE",
+									redirectUrl: `/thread/${data.id}`,
+								});
+							}}
 							data={data}
 							isLoading={isLoading}
 						/>
@@ -170,7 +197,7 @@ const EditPopover = ({ thread }: { thread: IThread }) => {
 	const [activeType, setActiveType] = useState<string>();
 	const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
-	const { updateThread } = useUpdateThread({ queryToInvalidate: ["threads"]});
+	const { updateThread } = useUpdateThread({ queryToInvalidate: ["threads"] });
 
 	const handleClick = (type: string) => {
 		if (type === "Edit" || type === "Delete") {

@@ -109,7 +109,7 @@ export async function PUT(req: NextRequest) {
 
 		if (type == "threadLike") {
 			return handleThreadLike(user, threadId);
-		} 
+		}
 	} catch (error: any) {
 		console.error(error);
 		return NextResponse.json({ success: false, message: error.message });
@@ -124,39 +124,39 @@ export async function DELETE(req: NextRequest) {
 
 		if (!threadId) {
 			return NextResponse.json({
-                success: false,
-                message: "Please Provide Thread ID",
-            });
+				success: false,
+				message: "Please Provide Thread ID",
+			});
 		}
 
 		const thread = await prisma.thread.findFirst({ where: { id: threadId } });
 
 		if (!thread) {
 			return NextResponse.json({
-                success: false,
-                message: "Thread Not Found",
-            });
+				success: false,
+				message: "Thread Not Found",
+			});
 		}
 
 		if (thread.authorId !== user.id) {
-            return NextResponse.json({
-                success: false,
-                message: "You are not authorized to delete this thread",
-            });
-        }
+			return NextResponse.json({
+				success: false,
+				message: "You are not authorized to delete this thread",
+			});
+		}
 
 		await prisma.thread.delete({ where: { id: threadId } });
-		
+
 		return NextResponse.json({
-            success: true,
-            message: "Thread Deleted Successfully",
-        });
+			success: true,
+			message: "Thread Deleted Successfully",
+		});
 	} catch (error: any) {
 		console.log(error.message);
 		return NextResponse.json({
 			success: false,
-            message: error.message,
-		})
+			message: error.message,
+		});
 	}
 }
 const handleThreadLike = async (user: User, threadId: string) => {

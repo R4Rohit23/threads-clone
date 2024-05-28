@@ -14,7 +14,8 @@ const ROUTES = {
 	FOLLOW: {
 		FOLLOW: "/api/follow",
 		REQUEST: "/api/follow/request"
-	}
+	},
+	NOTIFICATION: "/api/notification"
 };
 
 export default ROUTES;

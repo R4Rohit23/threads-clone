@@ -3,7 +3,6 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
-import { useEffect } from "react";
 
 interface IProps {
 	isOpen: boolean;

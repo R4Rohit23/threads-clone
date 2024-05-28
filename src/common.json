@@ -1,0 +1,8 @@
+{
+	"NOTIFICATION_TYPE": [
+		"THREAD_LIKE",
+		"COMMENT_LIKE",
+		"THREAD_COMMENT"
+	]
+	
+}
