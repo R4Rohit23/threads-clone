@@ -25,20 +25,20 @@ const Notifications = () => {
 		return toast.error("Error While Fetching notifications");
 	}
 
-	useEffect(() => {
-		const handleNotification = async (newNotification: any) => {
-			setNotifications((prev) => [...prev, newNotification]);
-		};
+	// useEffect(() => {
+	// 	const handleNotification = async (newNotification: any) => {
+	// 		setNotifications((prev) => [...prev, newNotification]);
+	// 	};
 
-		pusherClient.subscribe(session?.user.id as string);
+	// 	pusherClient.subscribe(session?.user.id as string);
 
-		pusherClient.bind("new-notification", handleNotification);
+	// 	pusherClient.bind("new-notification", handleNotification);
 
-		return () => {
-			pusherClient.unsubscribe(session?.user.id as string);
-			pusherClient.unbind("new-notification");
-		};
-	}, [session?.user.id]);
+	// 	return () => {
+	// 		pusherClient.unsubscribe(session?.user.id as string);
+	// 		pusherClient.unbind("new-notification");
+	// 	};
+	// }, [session?.user.id]);
 
 	return (
 		<div className="w-auto h-auto overflow-y-auto px-5">

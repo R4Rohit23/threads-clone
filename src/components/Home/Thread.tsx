@@ -91,7 +91,7 @@ const Thread = ({ data }: IProps) => {
 							>
 								{data.thumbnails?.map((src, indx) =>
 									checkIsImage(src) ? (
-										<SwiperSlide>
+										<SwiperSlide key={indx}>
 											<img
 												key={indx}
 												src={src}
@@ -100,7 +100,7 @@ const Thread = ({ data }: IProps) => {
 											/>
 										</SwiperSlide>
 									) : (
-										<SwiperSlide>
+										<SwiperSlide key={indx}>
 											<video
 												controls
 												className="w-full max-h-96 object-cover rounded-lg cursor-pointer"

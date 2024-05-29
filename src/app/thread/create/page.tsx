@@ -109,7 +109,7 @@ const CreateThread = () => {
 							<div className="gap-5 overflow-x-auto">
 								{uploadedAsset?.map((src, indx) =>
 									checkIsImage(src) ? (
-										<div className="relative">
+										<div className="relative" key={indx}>
 											<Image
 												src={src}
 												width={500}
