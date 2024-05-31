@@ -20,7 +20,7 @@ export const useGetMyNotifications = ({ page, limit }: IProps) => {
 	};
 
 	const { data, isLoading, isError, error } = useQuery<INotificationData>({
-		queryKey: ["myNotifications"],
+		queryKey: ["myNotifications", page, limit],
 		queryFn: fetchData,
 	});
 

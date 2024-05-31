@@ -7,6 +7,7 @@ import { formatDate } from "@/utils/reusableFunctions";
 import { INotification } from "@/interface/notification";
 import { APIHandler } from "@/server/ApiHandler";
 import ROUTES from "@/server/Routes";
+import Link from "next/link";
 
 const Activities = () => {
 	const [page, setPage] = useState<number>(1);
@@ -88,10 +89,10 @@ const Activities = () => {
 									height={500}
 									className="w-10 h-10 rounded-full object-cover"
 								/>
-								<p className="text-base font-semibold">
-									@{notification.sender.username}{" "}
+								<Link href={`/${notification.sender.username}`} className="text-base font-semibold">
+									<span className="hover:underline">@{notification.sender.username}</span>{" "}
 									<span className="font-light">{notification.content}</span>
-								</p>
+								</Link>
 							</div>
 
 							<div>

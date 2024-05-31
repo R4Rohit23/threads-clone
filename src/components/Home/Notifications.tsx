@@ -1,7 +1,7 @@
 import Loader from "@/common/Loader";
 import { useGetMyNotifications } from "@/hooks/notifications/useGetAllNotifications";
 import { INotification } from "@/interface/notification";
-import { pusherClient } from "@/lib/pusher";
+import kafka from "@/lib/kafka";
 import { formatDate } from "@/utils/reusableFunctions";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -25,20 +25,28 @@ const Notifications = () => {
 		return toast.error("Error While Fetching notifications");
 	}
 
-	// useEffect(() => {
-	// 	const handleNotification = async (newNotification: any) => {
-	// 		setNotifications((prev) => [...prev, newNotification]);
-	// 	};
+	// const consumer = kafka.consumer({ groupId: "main-group" });
 
-	// 	pusherClient.subscribe(session?.user.id as string);
+	// const consumeNotifications = async () => {
+	// 	try {
+	// 		await consumer.connect();
+	// 		await consumer.subscribe({
+	// 			topic: "new-notification",
+	// 			fromBeginning: true,
+	// 		});
+	// 		await consumer.run({
+	// 			eachMessage: async ({ topic, partition, message }) => {
+	// 				console.log(message?.value?.toString());
+	// 				const newNotification = JSON.parse(message?.value?.toString() as string);
+	// 				setNotifications((prev) => [...prev, newNotification]);
+	// 			},
+	// 		});
+	// 	} catch (error) {
+	// 		console.error("Error consuming messages:", error);
+	// 	}
+	// };
 
-	// 	pusherClient.bind("new-notification", handleNotification);
-
-	// 	return () => {
-	// 		pusherClient.unsubscribe(session?.user.id as string);
-	// 		pusherClient.unbind("new-notification");
-	// 	};
-	// }, [session?.user.id]);
+	// consumeNotifications();
 
 	return (
 		<div className="w-auto h-auto overflow-y-auto px-5">
@@ -61,7 +69,7 @@ const Notifications = () => {
 										@{notification.sender.username}{" "}
 										<span className="font-light">{notification.content}</span>
 									</p>
-									<p className="text-xs text-main-grey text-end">
+									<p className="text-xs text-gray-400 text-end">
 										{formatDate(notification.createdAt)}
 									</p>
 								</div>

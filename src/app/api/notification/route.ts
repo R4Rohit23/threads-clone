@@ -4,7 +4,6 @@ import common from "@/common.json";
 import prisma from "@/lib/prismaClient";
 import { verifyToken } from "@/validation/verifyToken";
 import { SENDER_SELECT } from "../config";
-import { pusherServer } from "@/lib/pusher";
 
 export async function POST(req: NextRequest) {
 	try {
@@ -40,12 +39,6 @@ export async function POST(req: NextRequest) {
 				sender: SENDER_SELECT,
 			},
 		});
-
-		await pusherServer.trigger(
-			payload.receiverId,
-			"new-notification",
-			notification
-		);
 
 		return NextResponse.json({
 			success: true,
@@ -87,6 +80,7 @@ export async function GET(req: NextRequest) {
 				sender: SENDER_SELECT,
 			},
 			orderBy: { createdAt: "desc" },
+			take: limit,
 			skip: skip,
 		});
 

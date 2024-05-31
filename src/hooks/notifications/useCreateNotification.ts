@@ -1,3 +1,4 @@
+// import kafka from "@/lib/kafka";
 import { APIHandler } from "@/server/ApiHandler";
 import ROUTES from "@/server/Routes";
 import { useMutation } from "@tanstack/react-query";
@@ -23,8 +24,25 @@ const createNotificationFunction = async (props: IProps) => {
 		...props,
 	});
 
+	console.log(data);
+
 	if (!status) {
-		throw new Error(data.message);
+		throw new Error(data?.message);
 	}
+
+	// const producer = kafka.producer();
+
+	// await producer.connect();
+
+	// const result = await producer.send({
+	// 	topic: "new-notification",
+	// 	messages: [
+	// 		{
+	// 			value: data.data
+	// 		},
+	// 	],
+	// });
+	// console.log(result);
+	// await producer.disconnect();
 	return data.data;
 };

@@ -114,10 +114,10 @@ const ProfilePage = () => {
 						<div>
 							<ButtonField
 								text={followStatus}
-								className="bg-white text-black hover:bg-white hover:text-black font-semibold text-sm"
 								disabled={followStatus === "Requested"}
 								loading={isLoading}
 								handleFunction={handleFollowUnfollow}
+								spinnerColor="black"
 							/>
 						</div>
 					</div>

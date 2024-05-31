@@ -18,7 +18,6 @@ import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import { DialogBox } from "@/common/Dialog";
 import EditThread from "../Thread/EditThread";
 import ButtonField from "@/common/ButtonField";
-import { pusherClient } from "@/lib/pusher";
 import common from "@/common.json";
 import { useCreateNotification } from "@/hooks/notifications/useCreateNotification";
 import { Swiper, SwiperSlide } from "swiper/react";

@@ -16,6 +16,7 @@ export async function GET(req: NextRequest) {
 			});
 		}
 
+		// My profile
 		if (user.username === username) {
 			const foundUser = await prisma.user.findFirst({
 				where: { username },
@@ -29,7 +30,8 @@ export async function GET(req: NextRequest) {
 					comments: {
 						include: {
 							sender: SENDER_SELECT
-						}
+						},
+						orderBy: { createdAt: "desc" }
 					},
 					threads: {
 						select: {
@@ -84,7 +86,12 @@ export async function GET(req: NextRequest) {
 					email: true,
 					bio: true,
 					profileImage: true,
-					comments: true,
+					comments: {
+						include: {
+							sender: SENDER_SELECT
+						},
+						orderBy: { createdAt: "desc" }
+					},
 					threads: {
 						select: {
 							id: true,

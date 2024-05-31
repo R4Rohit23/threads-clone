@@ -133,7 +133,7 @@ export default function Navbar() {
 											<Menu.Item>
 												{({ active }) => (
 													<a
-														href="#"
+														href="/profile"
 														className={classNames(
 															"block px-4 py-2 text-sm hover:text-white text-gray-500"
 														)}
@@ -150,7 +150,7 @@ export default function Navbar() {
 															"block px-4 py-2 text-sm text-gray-500 hover:text-white"
 														)}
 													>
-														Settings
+														Saved Threads
 													</a>
 												)}
 											</Menu.Item>
