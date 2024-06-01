@@ -47,7 +47,7 @@ const HomePage = () => {
 		};
 	  
 		fetchData();
-	  }, [inView, hasNextPage, fetchNextPage]);
+	  }, [inView, hasNextPage]);
 
 	return (
 		<>
