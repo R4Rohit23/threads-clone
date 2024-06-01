@@ -19,6 +19,8 @@ model Thread {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   thumbnails    String[]
+  savedBy       String[]  @db.ObjectId
+  isPinned      Boolean   @default(false)
 
   @@map("threads")
 }

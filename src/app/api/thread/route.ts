@@ -3,44 +3,64 @@ import prisma from "@/lib/prismaClient";
 import { verifyToken } from "@/validation/verifyToken";
 import { User } from "@prisma/client";
 import { SENDER_SELECT } from "../config";
-
 const updateType = ["threadLike", "threadUpdate"];
 
 // Route for Get all threads
-export async function GET() {
+export async function GET(req: NextRequest) {
+	const limit = 5;
+
+	// Cursor-based pagination uses cursor and take to return a limited set of results before or after a given cursor
+	const { searchParams } = req.nextUrl;
+	const query = searchParams.get("cursor") as string;
+	const cursor = query === "false" ? "" : query;
+	const cursorObj = cursor === "" ? undefined : { id: cursor as string };
+
 	try {
-		const threads = await prisma.thread.findMany({
-			include: {
-				author: {
-					select: {
-						id: true,
-						username: true,
-						name: true,
-						profileImage: true,
-						bio: true,
-						totalFollowers: true,
-						totalFollowing: true,
+		let threads: any[] = [];
+
+		if (query !== "false") {
+			threads = await prisma.thread.findMany({
+				include: {
+					author: {
+						select: {
+							id: true,
+							username: true,
+							name: true,
+							profileImage: true,
+							bio: true,
+							totalFollowers: true,
+							totalFollowing: true,
+						},
+					},
+					comments: {
+						where: { parentCommentId: null },
+						select: {
+							id: true,
+							text: true,
+							sender: SENDER_SELECT,
+							totalLikes: true,
+							totalComments: true,
+							parentCommentId: true,
+							createdAt: true,
+						},
 					},
 				},
-				comments: {
-					where: { parentCommentId: null },
-					select: {
-						id: true,
-						text: true,
-						sender: SENDER_SELECT,
-						totalLikes: true,
-						totalComments: true,
-						parentCommentId: true,
-						createdAt: true,
-					},
+				orderBy: {
+					createdAt: "desc",
 				},
-			},
-			orderBy: {
-				createdAt: "desc",
+				take: limit,
+				cursor: cursorObj,
+				skip: cursor === "" ? 0 : 1, // skip the cursor
+			});
+		}
+
+		return NextResponse.json({
+			success: true,
+			data: {
+				threads,
+				nextId: threads.length === limit ? threads[limit - 1].id : undefined, // send the next cursor in the response
 			},
 		});
-
-		return NextResponse.json({ success: true, data: threads });
 	} catch (error: any) {
 		console.log(error);
 		return NextResponse.json({ success: false, message: error.message });

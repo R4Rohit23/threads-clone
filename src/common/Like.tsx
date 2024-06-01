@@ -18,24 +18,24 @@ const Like = ({ handleFunction, data, isLoading }: ILike) => {
 			{isLoading ? (
 				<Spinner />
 			) : (
-				<>
+				<div className="flex gap-1">
 					<div>
 						<button onClick={handleFunction}>
 							{data?.likedBy?.includes(session?.user.id as string) ? (
 								<FaHeart className={`w-5 h-5 text-red-500`} />
 							) : (
-								<CiHeart className="w-6 h-6 opacity-40 hover:opacity-100" />
+								<CiHeart className="w-6 h-6 opacity-60 hover:opacity-100" />
 							)}
 						</button>
 					</div>
 					<div>
 						<p className="text-gray-400 text-sm">
 							{data?.totalLikes && data.totalLikes > 1
-								? `${data?.totalLikes} likes`
-								: `${data?.totalLikes} like`}
+								? `${data?.totalLikes} `
+								: `${data?.totalLikes} `}
 						</p>
 					</div>
-				</>
+				</div>
 			)}
 		</div>
 	);

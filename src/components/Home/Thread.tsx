@@ -18,44 +18,44 @@ import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import { DialogBox } from "@/common/Dialog";
 import EditThread from "../Thread/EditThread";
 import ButtonField from "@/common/ButtonField";
-import common from "@/common.json";
+import { TiPin, TiPinOutline } from "react-icons/ti";
 import { useCreateNotification } from "@/hooks/notifications/useCreateNotification";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 
 import { Navigation } from "swiper/modules";
+import SaveThread from "../Thread/SaveThread";
+import { usePathname } from "next/navigation";
 
 interface IProps {
 	data: IThread;
+	queryToInvalidate: any[];
 }
 
-const Thread = ({ data }: IProps) => {
+const Thread = ({ data, queryToInvalidate }: IProps) => {
 	const { data: session } = useSession();
-	const { updateThread, isLoading } = useUpdateThread({
-		queryToInvalidate: ["threads"],
+	const pathname = usePathname();
+	console.log(pathname)
+	const { updateThread } = useUpdateThread({
+		queryToInvalidate: queryToInvalidate,
 	});
 	const { createNotificationMutation } = useCreateNotification();
 
-	const [currentIndex, setCurrentIndex] = useState<number>(0);
 	const [isOpen, setIsOpen] = useState<boolean>(false);
+	const [isSaving, setIsSaving] = useState<boolean>(false);
+	const [isLiking, setIsLiking] = useState<boolean>(false);
 
 	const IS_MINE = session?.user.id === data.author.id;
 
-	const handlePrev = (images: string[]) => {
-		setCurrentIndex((prevIndex: any) =>
-			prevIndex === 0 ? images.length - 1 : prevIndex - 1
-		);
-	};
-
-	const handleNext = (images: string[]) => {
-		setCurrentIndex((prevIndex: any) =>
-			prevIndex === images.length - 1 ? 0 : prevIndex + 1
-		);
-	};
-
 	return (
 		<div className="border-b px-4 py-4 sm:px-0 border-gray-700">
+			{data.isPinned && pathname === "/profile" && (
+				<p className="flex text-xs text-gray-400 gap-2 items-center mb-3 ml-5">
+					<TiPinOutline className="w-5 h-5" />
+					Pinned
+				</p>
+			)}
 			<div className="flex gap-2 items-start relative">
 				<Image
 					src={data?.author?.profileImage}
@@ -145,10 +145,12 @@ const Thread = ({ data }: IProps) => {
 						</Link>
 					)}
 
-					<div className="flex gap-5">
+					<div className="flex gap-5 items-center">
 						<Like
 							handleFunction={async () => {
+								setIsLiking(true);
 								await updateThread({ type: "threadLike", threadId: data.id });
+								setIsLiking(false);
 								await createNotificationMutation.mutateAsync({
 									receiverId: data.author.id,
 									type: "THREAD_LIKE",
@@ -156,22 +158,23 @@ const Thread = ({ data }: IProps) => {
 								});
 							}}
 							data={data}
-							isLoading={isLoading}
+							isLoading={isLiking}
 						/>
-						<div className="space-y-2">
-							<div>
-								<Link href={"/thread/" + data.id}>
-									<IoChatbubbleOutline className="w-5 h-5 opacity-40 hover:opacity-100" />
-								</Link>
-							</div>
-							<div>
-								<p className="text-gray-400 text-sm">
-									{data?.totalComments && data.totalComments > 1
-										? `${data?.totalComments} comments`
-										: `${data?.totalComments} comment`}
-								</p>
-							</div>
+						<div className="flex gap-1 pb-2">
+							<Link href={"/thread/" + data.id}>
+								<IoChatbubbleOutline className="w-5 h-5 opacity-40 hover:opacity-100" />
+							</Link>
+							<p className="text-gray-400 text-sm">{data.totalComments}</p>
 						</div>
+						<SaveThread
+							data={data}
+							isLoading={isSaving}
+							handleFunction={async () => {
+								setIsSaving(true);
+								await updateThread({ type: "threadSave", threadId: data.id });
+								setIsSaving(false);
+							}}
+						/>
 					</div>
 				</div>
 				{IS_MINE && (
@@ -196,12 +199,19 @@ const EditPopover = ({ thread }: { thread: IThread }) => {
 	const [activeType, setActiveType] = useState<string>();
 	const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
-	const { updateThread } = useUpdateThread({ queryToInvalidate: ["threads"] });
+	const { updateThread } = useUpdateThread({
+		queryToInvalidate: ["userProfile", thread.author.username],
+	});
 
 	const handleClick = (type: string) => {
 		if (type === "Edit" || type === "Delete") {
 			setActiveType(type);
 			setIsOpen(true);
+		} else {
+			updateThread({
+				threadId: thread.id,
+				type: "threadPin",
+			});
 		}
 	};
 

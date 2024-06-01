@@ -6,7 +6,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 interface IUpdateThread {
-	type?: "threadLike" | "threadUpdate" | "threadDelete";
+	type?: "threadLike" | "threadUpdate" | "threadDelete" | "threadSave" | "threadPin";
 	threadId?: string;
 	title?: string;
 	thumbnails?: string[];
@@ -43,6 +43,28 @@ export const useUpdateThread = ({ queryToInvalidate }: IUpdateThread) => {
 		},
 	});
 
+	const threadSave = useMutation({
+		mutationFn: saveThreadFunction,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: queryToInvalidate });
+		},
+		onError: (error) => {
+			toast.error(error.message ?? "Error While Saving Thread");
+			console.log(error);
+		},
+	});
+
+	const threadPin = useMutation({
+		mutationFn: pinThreadFunction,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: queryToInvalidate });
+		},
+		onError: (error) => {
+			toast.error(error.message ?? "Error While Saving Thread");
+			console.log(error);
+		},
+	});
+
 	const updateThread = async ({
 		type,
 		threadId,
@@ -65,6 +87,16 @@ export const useUpdateThread = ({ queryToInvalidate }: IUpdateThread) => {
 				await threadUpdate.mutateAsync({ type, threadId, title, thumbnails });
 				setIsLoading(false);
 				break;
+			case "threadSave":
+				setIsLoading(true);
+				await threadSave.mutateAsync({ threadId });
+				setIsLoading(false);
+				break;
+			case "threadPin":
+				setIsLoading(true);
+                await threadPin.mutateAsync({ threadId });
+                setIsLoading(false);
+                break;
 		}
 	};
 
@@ -115,11 +147,39 @@ const updateThreadFunction = async ({
 
 		return data;
 	} else {
-		const { data } = await APIHandler("DELETE", ROUTES.THREAD, { threadId: threadId});
+		const { data } = await APIHandler("DELETE", ROUTES.THREAD, {
+			threadId: threadId,
+		});
 		if (!data.success) {
-            throw new Error(data.message);
-        } else {
-            toast.success(data.message?? "Thread Deleted Successfully");
-        }
+			throw new Error(data.message);
+		} else {
+			toast.success(data.message ?? "Thread Deleted Successfully");
+		}
 	}
+};
+
+const saveThreadFunction = async ({ threadId }: IUpdateThread) => {
+	const { data } = await APIHandler("POST", ROUTES.THREAD + "/save", {
+		threadId: threadId,
+	});
+	if (!data.success) {
+		throw new Error(data.message);
+	} else {
+		toast.success(data?.message);
+	}
+
+	return data;
+};
+
+const pinThreadFunction = async ({ threadId }: IUpdateThread) => {
+	const { data } = await APIHandler("PUT", ROUTES.THREAD + "/pin", {
+		threadId: threadId,
+	});
+	if (!data.success) {
+		throw new Error(data.message);
+	} else {
+		toast.success(data?.message);
+	}
+
+	return data;
 };

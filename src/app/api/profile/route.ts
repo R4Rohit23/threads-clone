@@ -29,9 +29,9 @@ export async function GET(req: NextRequest) {
 					profileImage: true,
 					comments: {
 						include: {
-							sender: SENDER_SELECT
+							sender: SENDER_SELECT,
 						},
-						orderBy: { createdAt: "desc" }
+						orderBy: { createdAt: "desc" },
 					},
 					threads: {
 						select: {
@@ -43,11 +43,12 @@ export async function GET(req: NextRequest) {
 							totalComments: true,
 							likedBy: true,
 							createdAt: true,
+							isPinned: true,
 						},
-						orderBy: { createdAt: "desc" },
+						orderBy: [{ isPinned: "desc" }, { createdAt: "desc" }],
 					},
 					sentFollowRequests: {
-						where: { status: "PENDING"},
+						where: { status: "PENDING" },
 						select: {
 							id: true,
 							receiverId: true,
@@ -56,7 +57,7 @@ export async function GET(req: NextRequest) {
 						},
 					},
 					receivedFollowRequests: {
-						where: { status: "PENDING"},
+						where: { status: "PENDING" },
 						select: {
 							id: true,
 							senderId: true,
@@ -88,9 +89,9 @@ export async function GET(req: NextRequest) {
 					profileImage: true,
 					comments: {
 						include: {
-							sender: SENDER_SELECT
+							sender: SENDER_SELECT,
 						},
-						orderBy: { createdAt: "desc" }
+						orderBy: { createdAt: "desc" },
 					},
 					threads: {
 						select: {
@@ -106,7 +107,7 @@ export async function GET(req: NextRequest) {
 						orderBy: { createdAt: "desc" },
 					},
 					sentFollowRequests: {
-						where: { status: "PENDING"},
+						where: { status: "PENDING" },
 						select: {
 							id: true,
 							receiverId: true,
@@ -115,7 +116,7 @@ export async function GET(req: NextRequest) {
 						},
 					},
 					receivedFollowRequests: {
-						where: { status: "PENDING"},
+						where: { status: "PENDING" },
 						select: {
 							id: true,
 							senderId: true,

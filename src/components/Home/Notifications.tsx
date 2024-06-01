@@ -1,11 +1,10 @@
 import Loader from "@/common/Loader";
 import { useGetMyNotifications } from "@/hooks/notifications/useGetAllNotifications";
 import { INotification } from "@/interface/notification";
-import kafka from "@/lib/kafka";
 import { formatDate } from "@/utils/reusableFunctions";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 
 const Notifications = () => {

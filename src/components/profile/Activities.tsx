@@ -1,5 +1,4 @@
 import Loader from "@/common/Loader";
-import { useGetMyNotifications } from "@/hooks/notifications/useGetAllNotifications";
 import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import Image from "next/image";
@@ -14,7 +13,6 @@ const Activities = () => {
 	const [notifications, setNotifications] = useState<INotification[]>([]);
 	const [totalCount, setTotalCount] = useState<number>(0);
 	const [isLoading, setIsLoading] = useState(false);
-	const hasMore = page < Math.ceil(totalCount / 10);
 
 	const fetchData = async () => {
 		try {

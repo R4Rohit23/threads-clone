@@ -145,7 +145,7 @@ export default function Navbar() {
 											<Menu.Item>
 												{({ active }) => (
 													<a
-														href="#"
+														href="/saved-threads"
 														className={classNames(
 															"block px-4 py-2 text-sm text-gray-500 hover:text-white"
 														)}

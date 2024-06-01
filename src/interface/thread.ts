@@ -39,6 +39,7 @@ export interface IThread {
     totalComments: number;
     totalLikes: number;
     thumbnails?: string[];
+    isPinned: boolean;
 }
 
 export interface IFollowRequest {

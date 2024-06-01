@@ -12,7 +12,11 @@ const UserThreads = ({ data }: IProps) => {
 			{data &&
 				data.length > 0 &&
 				data.map((thread) => (
-					<Thread data={thread} key={thread.id} />
+					<Thread
+						data={thread}
+						key={thread.id}
+						queryToInvalidate={["userProfile", thread.author.username]}
+					/>
 				))}
 		</div>
 	);

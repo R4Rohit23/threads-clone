@@ -10,7 +10,7 @@ interface IComment {
 
 const Comment = ({ href, totalComments, readonly }: IComment) => {
 	return (
-		<div>
+		<div className="flex gap-1 items-center pb-1">
 			{readonly ? (
 				<button>
 					<IoChatbubbleOutline className="w-5 h-5 opacity-40 hover:opacity-100" />
@@ -24,9 +24,7 @@ const Comment = ({ href, totalComments, readonly }: IComment) => {
 			)}
 			<div>
 				<p className="text-gray-400 text-sm">
-					{totalComments && totalComments > 1
-						? `${totalComments} comments`
-						: `${totalComments} comment`}
+					{totalComments}
 				</p>
 			</div>
 		</div>
