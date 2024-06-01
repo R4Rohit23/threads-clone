@@ -40,10 +40,14 @@ const HomePage = () => {
 	}
 
 	useEffect(() => {
-		if (inView && hasNextPage) {
+		const fetchData = () => {
+		  if (inView && hasNextPage) {
 			fetchNextPage();
-		}
-	}, [inView]);
+		  }
+		};
+	  
+		fetchData();
+	  }, [inView, hasNextPage, fetchNextPage]);
 
 	return (
 		<>
