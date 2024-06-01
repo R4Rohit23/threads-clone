@@ -44,10 +44,11 @@ const HomePage = () => {
 		  if (inView && hasNextPage) {
 			fetchNextPage();
 		  }
+		  return null;
 		};
 	  
 		fetchData();
-	  }, [inView, hasNextPage]);
+	  }, [inView, hasNextPage, fetchNextPage]);
 
 	return (
 		<>
