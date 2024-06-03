@@ -41,19 +41,21 @@ const HomePage = () => {
 
 	useEffect(() => {
 		const fetchData = () => {
-		  if (inView && hasNextPage) {
-			fetchNextPage();
-		  }
-		  return null;
+			if (inView && hasNextPage) {
+				fetchNextPage();
+			}
+			return null;
 		};
-	  
+
 		fetchData();
-	  }, [inView, hasNextPage, fetchNextPage]);
+	}, [inView, hasNextPage, fetchNextPage]);
 
 	return (
 		<>
 			{isLoading ? (
-				<Loader />
+				<div className="h-[80vh]">
+					<Loader />
+				</div>
 			) : (
 				<div className="text-white mx-auto max-w-3xl flex flex-col bg-dark-1 mt-5">
 					{data?.pages?.map((page) =>

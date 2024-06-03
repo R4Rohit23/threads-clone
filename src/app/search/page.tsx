@@ -55,7 +55,9 @@ const SearchPage = () => {
 				/>
 			</div>
 			{isLoading ? (
-				<Loader />
+				<div className="h-[70vh]">
+					<Loader />
+				</div>
 			) : (
 				<div className="flex flex-col divide-y divide-main-grey mt-5">
 					{searchData && searchData.length > 0 ? (

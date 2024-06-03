@@ -3,6 +3,8 @@ import prisma from "@/lib/prismaClient";
 import { verifyToken } from "@/validation/verifyToken";
 import { SENDER_SELECT } from "../config";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
 	try {
 		const user = await verifyToken(req);

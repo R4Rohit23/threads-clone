@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prismaClient";
 import { verifyToken } from "@/validation/verifyToken";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
 	try {
 		const { searchParams } = req.nextUrl;
