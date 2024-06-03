@@ -27,7 +27,9 @@ const ActivityPage = () => {
 	return (
 		<div>
 			{isLoading ? (
-				<Loader />
+				<div className="h-[70vh]">
+					<Loader />
+				</div>
 			) : (
 				<div>
 					<nav className="text-white flex items-center text-sm sticky top-20 backdrop-blur-md">

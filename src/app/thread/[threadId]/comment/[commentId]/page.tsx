@@ -16,10 +16,17 @@ import Comment from "@/common/Comment";
 
 const CommentById = () => {
 	const { commentId, threadId } = useParams();
-	const { likeComment, isLoading } = useComment({ commentId: commentId as string });
+	const { likeComment, isLoading } = useComment({
+		commentId: commentId as string,
+	});
 	const [currentIndex, setCurrentIndex] = useState<number>(0);
 
-	const { data, isLoading: commentLoading, isError, error } = useGetCommentById({
+	const {
+		data,
+		isLoading: commentLoading,
+		isError,
+		error,
+	} = useGetCommentById({
 		commentId: commentId as string,
 	});
 
@@ -42,7 +49,9 @@ const CommentById = () => {
 	return (
 		<>
 			{commentLoading ? (
-				<Loader />
+				<div className="h-[70vh]">
+					<Loader />
+				</div>
 			) : (
 				<div>
 					<div className="border-b py-4 border-gray-700">

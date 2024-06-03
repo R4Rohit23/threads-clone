@@ -36,7 +36,9 @@ const ProfilePage = () => {
 	return (
 		<div>
 			{isLoading ? (
-				<Loader />
+				<div className="h-[70vh]">
+					<Loader />
+				</div>
 			) : (
 				<div>
 					<div className="grid grid-cols-2 items-center">

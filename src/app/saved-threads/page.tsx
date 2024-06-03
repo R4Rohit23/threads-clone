@@ -18,7 +18,9 @@ const SavedThread = () => {
 	return (
 		<>
 			{isLoading ? (
-				<Loader />
+				<div className="h-[70vh]">
+					<Loader />
+				</div>
 			) : (
 				<div className="text-white mx-auto max-w-3xl flex flex-col bg-dark-1 mt-5">
 					{data?.map((thread: IThread) => (

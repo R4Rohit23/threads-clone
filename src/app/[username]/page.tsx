@@ -8,11 +8,7 @@ import UserComments from "@/components/profile/UserComments";
 import UserThreads from "@/components/profile/UserThreads";
 import { useUpdateFollowRequest } from "@/hooks/followRequest";
 import { useGetUserProfile } from "@/hooks/getUserProfile";
-import {
-	IComments,
-	IFollowRequest,
-	IThread,
-} from "@/interface/thread";
+import { IComments, IFollowRequest, IThread } from "@/interface/thread";
 import { formatFollowCount, getRequestStatus } from "@/utils/reusableFunctions";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -85,7 +81,9 @@ const ProfilePage = () => {
 	return (
 		<div>
 			{userLoading || parentUserLoading ? (
-				<Loader />
+				<div className="h-[70vh]">
+					<Loader />
+				</div>
 			) : (
 				<div>
 					<div className="grid grid-cols-2 items-center">
