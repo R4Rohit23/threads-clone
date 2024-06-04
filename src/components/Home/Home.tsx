@@ -7,6 +7,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { APIHandler } from "@/server/ApiHandler";
 import ROUTES from "@/server/Routes";
 import { useInView } from "react-intersection-observer";
+import AdBanner from "../AdBanner";
 
 const HomePage = () => {
 	const { ref, inView } = useInView();
@@ -57,26 +58,29 @@ const HomePage = () => {
 					<Loader />
 				</div>
 			) : (
-				<div className="text-white mx-auto max-w-3xl flex flex-col bg-dark-1 mt-5">
-					{data?.pages?.map((page) =>
-						page?.data?.threads?.map((thread: IThread) => (
-							<div key={thread.id}>
-								<Thread
-									data={thread}
-									key={thread.id}
-									queryToInvalidate={["threads"]}
-								/>
+				<div className="relative">
+					<div className="absolute left-0  max-w-xs mt-6 ml-5"><AdBanner /></div>
+					<div className="text-white mx-auto max-w-3xl flex flex-col bg-dark-1 mt-5">
+						{data?.pages?.map((page) =>
+							page?.data?.threads?.map((thread: IThread) => (
+								<div key={thread.id}>
+									<Thread
+										data={thread}
+										key={thread.id}
+										queryToInvalidate={["threads"]}
+									/>
+								</div>
+							))
+						)}
+						{isFetchingNextPage && (
+							<div className="my-5">
+								<Loader />
 							</div>
-						))
-					)}
-					{isFetchingNextPage && (
-						<div className="my-5">
-							<Loader />
-						</div>
-					)}
-					<span ref={ref} style={{ visibility: "hidden" }}>
-						intersection observer marker
-					</span>
+						)}
+						<span ref={ref} style={{ visibility: "hidden" }}>
+							intersection observer marker
+						</span>
+					</div>
 				</div>
 			)}
 		</>
