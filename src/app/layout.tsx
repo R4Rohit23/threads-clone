@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Raleway } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+import AdBanner from "@/components/AdSense";
 
 const inter = Raleway({ subsets: ["latin"] });
 
@@ -17,10 +18,11 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
+			<head>
+				<AdBanner />
+			</head>
 			<body className={`${inter.className} bg-dark-1`}>
-				<Providers>
-					{children}
-				</Providers>
+				<Providers>{children}</Providers>
 			</body>
 		</html>
 	);
