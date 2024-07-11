@@ -26,8 +26,6 @@ const CreateThread = () => {
 		title: Yup.string().required("Title is required"),
 	});
 
-	console.log(uploadedAsset);
-
 	const handleDelete = async (file: any) => {
 		const updatedImages = uploadedAsset.filter((item) => item !== file);
 		setUploadedAsset(updatedImages);
@@ -78,24 +76,30 @@ const CreateThread = () => {
 					handleSubmit,
 					isSubmitting,
 				}) => (
-					<div className="flex justify-between items-start w-full gap-2 p-4">
-						<Image
-							src={
-								((session?.user.profileImage as string) ||
-									(session?.user.image as string)) ??
-								(session?.user &&
-									getImageFromUsername(
-										(session?.user?.username as string) ||
-											(session.user.name as string)
-									))
-							}
-							width={500}
-							height={500}
-							alt="Profile Image"
-							className="rounded-full object-cover w-10 h-10"
-						/>
-						<div className="flex flex-col w-full gap-5">
-							<p>@{session?.user?.username || session?.user?.name} </p>
+					<div className="block justify-between items-start w-full gap-2 p-4">
+						<div className="flex gap-2 items-center">
+							<Image
+								src={
+									((session?.user.profileImage as string) ||
+										(session?.user.image as string)) ??
+									(session?.user &&
+										getImageFromUsername(
+											(session?.user?.username as string) ||
+												(session.user.name as string)
+										))
+								}
+								width={500}
+								height={500}
+								alt="Profile Image"
+								className="rounded-full object-cover w-10 h-10"
+							/>
+							<p className="">
+								@{session?.user?.username || session?.user?.name}{" "}
+							</p>
+						</div>
+
+						<div className="flex flex-col w-full gap-5 mt-2">
+							{/* <p className="hidden sm:block">@{session?.user?.username || session?.user?.name} </p> */}
 							<div className="space-y-2">
 								<TextAreaField
 									placeholder="Write something special here..."

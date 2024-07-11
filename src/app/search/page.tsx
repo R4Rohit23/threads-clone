@@ -42,7 +42,7 @@ const SearchPage = () => {
 
 	return (
 		<div className="mx-auto">
-			<div className="flex gap-2 items-center">
+			<div className="flex gap-2 items-center px-5 max-w-sm sm:px-0 sm:w-full">
 				<MagnifyingGlassIcon className="w-5 h-5" />
 				<InputField
 					placeholder="Type Username or name of the user..."
@@ -59,7 +59,7 @@ const SearchPage = () => {
 					<Loader />
 				</div>
 			) : (
-				<div className="flex flex-col divide-y divide-main-grey mt-5">
+				<div className="flex flex-col divide-y divide-main-grey mt-5 px-5 sm:px-0">
 					{searchData && searchData.length > 0 ? (
 						searchData.map((data) => (
 							<UserProfile userData={data} key={data.id} />

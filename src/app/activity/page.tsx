@@ -32,12 +32,12 @@ const ActivityPage = () => {
 				</div>
 			) : (
 				<div>
-					<nav className="text-white flex items-center text-sm sticky top-20 backdrop-blur-md">
+					<nav className="text-white flex items-center text-sm sticky top-14 sm:top-20 backdrop-blur-md">
 						{["Requests", "Activities"].map((nav, indx) => (
 							<button
 								className={`${
 									activeNav === nav ? "border-b-2 border-white" : ""
-								} px-28 w-1/2 py-3`}
+								} sm:px-28 w-1/2 py-3`}
 								key={indx}
 								onClick={() => setActiveNav(nav)}
 							>

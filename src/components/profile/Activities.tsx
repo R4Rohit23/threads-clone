@@ -69,7 +69,7 @@ const Activities = () => {
 	}, [page]);
 
 	return (
-		<div className="py-5">
+		<div className="py-5 px-5 sm:px-0">
 			{isLoading ? (
 				<Loader />
 			) : notifications && notifications.length > 0 ? (
@@ -87,7 +87,7 @@ const Activities = () => {
 									height={500}
 									className="w-10 h-10 rounded-full object-cover"
 								/>
-								<Link href={`/${notification.sender.username}`} className="text-base font-semibold">
+								<Link href={`/${notification.sender.username}`} className="text-sm sm:text-base font-semibold">
 									<span className="hover:underline">@{notification.sender.username}</span>{" "}
 									<span className="font-light">{notification.content}</span>
 								</Link>

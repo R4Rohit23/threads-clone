@@ -1,4 +1,5 @@
 import Navbar from "@/common/Navbar";
+import MobNavbar from "@/components/Home/MobNavbar";
 
 export default function ThreadLayout({
 	children,
@@ -12,6 +13,9 @@ export default function ThreadLayout({
 				<div className="text-white mx-auto max-w-xl mt-10 flex flex-col">
 					{children}
 				</div>
+				{/* <div className="sticky w-full bottom-0 h-full"> */}
+					<MobNavbar />
+				{/* </div> */}
 			</body>
 		</html>
 	);

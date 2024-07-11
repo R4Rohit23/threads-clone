@@ -36,7 +36,7 @@ const FollowRequests = ({ followRequests }: IProps) => {
 	};
 
 	return (
-		<div className="flex flex-col divide-y-2 mt-5">
+		<div className="flex flex-col divide-y-2 mt-5 h-full">
 			{followRequests &&
 				followRequests.length > 0 ?
 				followRequests.map((request) => (
@@ -80,7 +80,7 @@ const FollowRequests = ({ followRequests }: IProps) => {
 						</div>
 					</div>
 				)) : (
-					<p className="mx-auto text-main-grey">No Requests so far</p>
+					<p className="mx-auto text-main-grey h-[65vh]">No Requests so far</p>
 				)}
 		</div>
 	);

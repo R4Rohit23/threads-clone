@@ -36,7 +36,6 @@ interface IProps {
 const Thread = ({ data, queryToInvalidate }: IProps) => {
 	const { data: session } = useSession();
 	const pathname = usePathname();
-	console.log(pathname)
 	const { updateThread } = useUpdateThread({
 		queryToInvalidate: queryToInvalidate,
 	});
@@ -56,17 +55,35 @@ const Thread = ({ data, queryToInvalidate }: IProps) => {
 					Pinned
 				</p>
 			)}
-			<div className="flex gap-2 items-start relative">
+			<div className="flex flex-col sm:flex-row gap-2 items-start relative">
+				<div className="sm:hidden flex items-center gap-2">
+					<Image
+						src={data?.author?.profileImage}
+						width={400}
+						height={400}
+						alt="Profile Image"
+						className="rounded-full object-cover w-8 h-8 sm:w-10 sm:h-10"
+					/>
+					<Link href={`/${data?.author?.username}`}>
+						<UserProfilePopover userData={data.author}>
+							<p>@{data?.author?.username} </p>
+						</UserProfilePopover>
+					</Link>
+
+					<p className="text-gray-400 text-xs sm:text-sm">
+						{formatDate(data?.createdAt)}
+					</p>
+				</div>
 				<Image
 					src={data?.author?.profileImage}
 					width={400}
 					height={400}
 					alt="Profile Image"
-					className="rounded-full object-cover w-8 h-8 sm:w-10 sm:h-10"
+					className="rounded-full object-cover w-8 h-8 sm:w-10 sm:h-10 hidden sm:block"
 				/>
 
 				<div className="flex flex-col gap-2 relative">
-					<div className="flex items-center gap-2 text-sm sm:text-base">
+					<div className="hidden sm:flex items-center gap-2 text-sm sm:text-base">
 						<Link href={`/${data?.author?.username}`}>
 							<UserProfilePopover userData={data.author}>
 								<p>@{data?.author?.username} </p>
@@ -86,7 +103,7 @@ const Thread = ({ data, queryToInvalidate }: IProps) => {
 							<Swiper
 								navigation={true}
 								modules={[Navigation]}
-								className="max-w-2xl"
+								className="sm:max-w-2xl max-w-[342px]"
 							>
 								{data.thumbnails?.map((src, indx) =>
 									checkIsImage(src) ? (

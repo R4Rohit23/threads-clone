@@ -8,8 +8,8 @@ import { Toaster } from "react-hot-toast";
 
 import { ourFileRouter } from "@/app/api/uploadthing/core";
 
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+	import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+	import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 const toasterStyle = {
 	style: {

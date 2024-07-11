@@ -40,7 +40,7 @@ const EditThread = ({
 	};
 
 	return (
-		<div className="flex flex-col gap-5">
+		<div className="flex flex-col gap-5 max-h-[70vh] sm:h-full overflow-y-auto">
 			<TextAreaField
 				label="Title"
 				defaultValue={thread?.title}

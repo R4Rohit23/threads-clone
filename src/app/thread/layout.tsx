@@ -1,4 +1,5 @@
 import Navbar from "@/common/Navbar";
+import MobNavbar from "@/components/Home/MobNavbar";
 
 export default function ThreadLayout({
 	children,
@@ -9,9 +10,10 @@ export default function ThreadLayout({
 		<html lang="en">
 			<body className={` bg-dark-1`}>
 				<Navbar />
-				<div className="text-white mx-auto max-w-3xl mt-5 flex flex-col">
+				<div className="text-white mx-auto max-w-3xl sm:px-0 mt-5 flex flex-col">
 					{children}
 				</div>
+				<MobNavbar />
 			</body>
 		</html>
 	);

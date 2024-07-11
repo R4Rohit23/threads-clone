@@ -30,18 +30,18 @@ const ProfilePage = () => {
 
 	if (!isLoading && isError) {
 		console.log(error);
-		return toast.error("Error While Fetching Profile");
+		return toast.error("Error While Fetching Profile", { id: "error"});
 	}
 
 	return (
 		<div>
 			{isLoading ? (
-				<div className="h-[70vh]">
+				<div className="h-[80vh]">
 					<Loader />
 				</div>
 			) : (
 				<div>
-					<div className="grid grid-cols-2 items-center">
+					<div className="grid grid-cols-2 items-center px-5 sm:px-0">
 						<div>
 							<p className="text-2xl font-semibold">{userData?.name} </p>
 							<p className="font-light">@{userData?.username} </p>
@@ -56,7 +56,7 @@ const ProfilePage = () => {
 							/>
 						</div>
 					</div>
-					<div className="space-y-4">
+					<div className="space-y-4 px-5 sm:px-0">
 						<p>{userData?.bio} </p>
 						<p
 							className="text-main-grey hover:underline cursor-pointer"
@@ -86,7 +86,7 @@ const ProfilePage = () => {
 							<button
 								className={`${
 									activeNav === nav ? "border-b-2 border-white" : ""
-								} px-28 w-1/2 py-3`}
+								} sm:px-28 w-1/2 py-3`}
 								key={indx}
 								onClick={() => setActiveNav(nav)}
 							>

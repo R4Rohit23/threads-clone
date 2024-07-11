@@ -1,4 +1,5 @@
 import Navbar from "@/common/Navbar";
+import MobNavbar from "@/components/Home/MobNavbar";
 
 export default function CommentLayout({
 	children,

@@ -52,7 +52,7 @@ export default function Navbar() {
 		>
 			{({ open }) => (
 				<>
-					<div className="mx-auto max-w-7xl lg:py-2">
+					<div className="mx-auto max-w-7xl lg:py-2 px-5 sm:px-0">
 						<div className="flex h-16 justify-between">
 							<div className="flex">
 								<Link className="flex flex-shrink-0 items-center" href="/">
@@ -86,7 +86,7 @@ export default function Navbar() {
 									</Link>
 								))}
 							</div>
-							<div className="hidden  sm:flex sm:items-center">
+							<div className="flex items-center">
 								<PopoverComponent
 									isOpen={isNotificationOpen}
 									setIsOpen={setIsNotificationOpen}
@@ -175,18 +175,7 @@ export default function Navbar() {
 									</Transition>
 								</Menu>
 							</div>
-							<div className="flex items-center sm:hidden">
-								{/* Mobile menu button */}
-								<Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
-									<span className="absolute -inset-0.5" />
-									<span className="sr-only">Open main menu</span>
-									{open ? (
-										<XMarkIcon className="block h-6 w-6" aria-hidden="true" />
-									) : (
-										<Bars3Icon className="block h-6 w-6" aria-hidden="true" />
-									)}
-								</Disclosure.Button>
-							</div>
+							
 						</div>
 					</div>
 

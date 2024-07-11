@@ -66,7 +66,7 @@ const Discussion = ({
 	};
 
 	return (
-		<section className="bg-dark-1 py-8 lg:py-16 antialiased">
+		<section className="bg-dark-1 py-8 lg:py-16 antialiased px-5 sm:px-0">
 			<div className="max-w-3xl mx-auto">
 				<div className="flex justify-between items-center mb-6">
 					<h2 className="text-lg lg:text-xl font-bold text-white">
@@ -88,7 +88,7 @@ const Discussion = ({
 								width={300}
 								height={400}
 								alt="Profile Image"
-								className="rounded-full object-cover w-10 h-10"
+								className="hidden sm:block rounded-full object-cover w-10 h-10"
 							/>
 						</div>
 						<textarea
@@ -145,7 +145,7 @@ export const CommentComponent = ({
 
 	return (
 		<article
-			className={`p-6 ${isReply ? "mb-3 ml-6 lg:ml-12" : ""} text-base  ${
+			className={`sm:p-6 pb-5 ${isReply ? "mb-3 ml-6 lg:ml-12" : ""} text-base  ${
 				isReply ? "" : ""
 			} border-b border-gray-700`}
 		>

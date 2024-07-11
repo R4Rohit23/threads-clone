@@ -54,7 +54,7 @@ const CommentById = () => {
 				</div>
 			) : (
 				<div>
-					<div className="border-b py-4 border-gray-700">
+					<div className="border-b py-4 border-gray-700 px-5 sm:px-0">
 						<div className="flex gap-2 items-start w-full">
 							<Image
 								src={data?.sender?.profileImage as string}
@@ -72,7 +72,7 @@ const CommentById = () => {
 									</p>
 								</div>
 								<div>
-									<p className="text-white text-base">{data?.text}</p>
+									<p className="text-white text-sm sm:text-base">{data?.text}</p>
 								</div>
 								<div className="flex items-center justify-center mt-2">
 									{data?.thumbnails && data.thumbnails?.length > 1 && (
